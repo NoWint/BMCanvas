@@ -1,0 +1,1251 @@
+ModCanvas is NOT a launcher.
+
+ModCanvas is NOT a mod manager.
+
+ModCanvas is a professional engineering environment for designing Minecraft modpacks.
+
+Every UI decision must reinforce the feeling of precision, clarity, and engineering-grade tooling.
+
+Prioritize visual hierarchy, whitespace, motion quality, and graph-based workflows over traditional dashboard layouts.
+
+
+
+ModCanvas PRD v1.0
+
+Product Name
+
+ModCanvas
+
+Tagline:
+
+Design Minecraft Modpacks Visually.
+
+Alternative:
+
+The Professional IDE for Minecraft Modpacks.
+
+⸻
+
+Vision
+
+Minecraft Modpack creation is currently fragmented, technical, and frustrating.
+
+Users must manually:
+
+* Search mods
+* Resolve dependencies
+* Check compatibility
+* Read crash logs
+* Export pack formats
+
+ModCanvas transforms modpack creation into a visual design workflow.
+
+The goal is to become:
+
+“Figma for Minecraft Modpacks”
+
+where users can build, analyze, and export modpacks through an intuitive node-based interface.
+
+⸻
+
+Target Users
+
+Primary
+
+Minecraft Modpack Creators
+
+Examples:
+
+* CurseForge creators
+* Modrinth creators
+* SMP administrators
+* Technical Minecraft players
+
+Pain Points:
+
+* Dependency hell
+* Version incompatibility
+* Poor visualization
+* Difficult maintenance
+
+⸻
+
+Secondary
+
+Advanced Minecraft Players
+
+People who:
+
+* Create private modpacks
+* Play with 50~300 mods
+* Frequently troubleshoot crashes
+
+⸻
+
+Core Product Principles
+
+1. Visual First
+
+Everything should be represented visually.
+
+No giant dependency tables.
+
+No endless text lists.
+
+⸻
+
+2. Creator Focused
+
+Not a launcher.
+
+Not a mod downloader.
+
+A creation tool.
+
+⸻
+
+3. Professional Feeling
+
+Inspired by:
+
+* Figma
+* Xcode
+* Final Cut Pro
+* Logic Pro
+
+Avoid:
+
+* CurseForge style UI
+* Legacy launcher aesthetics
+
+⸻
+
+MVP Scope
+
+Version 0.1
+
+Only solve:
+
+* Mod discovery
+* Dependency visualization
+* Conflict detection
+* Exporting
+
+No AI.
+
+No cloud sync.
+
+No launcher functionality.
+
+⸻
+
+Feature 1
+
+Project System
+
+Users can create projects.
+
+Example:
+
+Create New Pack
+
+Name:
+Tech Revolution
+
+Minecraft Version:
+1.21.1
+
+Loader:
+Forge
+
+Description:
+Technology-focused progression pack
+
+Project structure:
+
+Project
+├── Metadata
+├── Mods
+├── Graph
+└── Exports
+
+⸻
+
+Feature 2
+
+Mod Search
+
+Integrated search.
+
+Sources:
+
+* Modrinth API
+* CurseForge API
+
+User can:
+
+Search:
+Create
+
+Results:
+
+Create
+Downloads
+Authors
+Version support
+
+One click:
+
+Add to Project
+
+⸻
+
+Feature 3
+
+Dependency Graph
+
+The signature feature.
+
+Visual graph generation.
+
+Example:
+
+Create
+├─ Flywheel
+├─ Registrate
+└─ Forge
+
+Nodes represent:
+
+* Mods
+* Libraries
+* APIs
+
+Edges represent:
+
+* Required dependency
+* Optional dependency
+* Incompatibility
+
+Capabilities:
+
+Zoom
+
+Pan
+
+Auto Layout
+
+Search Node
+
+Focus Node
+
+⸻
+
+Feature 4
+
+Conflict Detection
+
+Automatically detect:
+
+Version mismatch
+
+Loader mismatch
+
+Dependency missing
+
+Known incompatibilities
+
+Example:
+
+Optifine
+↔
+Sodium
+
+Display:
+
+Conflict Found
+
+Reason:
+Rendering pipeline incompatibility
+
+Suggested Fix:
+Remove Optifine
+
+Severity Levels:
+
+Info
+
+Warning
+
+Critical
+
+⸻
+
+Feature 5
+
+Mod Inspector
+
+Clicking a node opens inspector panel.
+
+Information:
+
+Name
+
+Description
+
+Author
+
+Dependencies
+
+Versions
+
+License
+
+Supported Minecraft Versions
+
+Website
+
+Source Code
+
+Changelog
+
+⸻
+
+Feature 6
+
+Export System
+
+Export formats:
+
+Modrinth Pack
+
+CurseForge Pack
+
+Prism Launcher
+
+ZIP
+
+Generated files:
+
+manifest
+
+mod list
+
+dependency metadata
+
+⸻
+
+User Interface
+
+Layout
+
+┌──────── Sidebar ────────┐
+│ Projects                │
+│ Discover                │
+│ Graph                   │
+│ Diagnostics             │
+│ Export                  │
+└─────────────────────────┘
+
+┌──── Main Canvas ────────┐
+│                         │
+│      Node Graph         │
+│                         │
+└─────────────────────────┘
+
+┌──── Inspector ──────────┐
+│ Selected Mod Info       │
+└─────────────────────────┘
+
+⸻
+
+Tech Stack
+
+Frontend
+
+Tauri v2
+
+React
+
+TypeScript
+
+TailwindCSS
+
+Framer Motion
+
+Zustand
+
+React Flow
+
+⸻
+
+Backend
+
+Rust
+
+Tokio
+
+Serde
+
+Reqwest
+
+SQLite
+
+⸻
+
+Data Sources
+
+Modrinth API
+
+CurseForge API
+
+⸻
+
+Architecture
+
+Frontend
+
+↓ IPC
+
+Rust Core
+
+↓
+Dependency Engine
+
+↓
+Graph Engine
+
+↓
+Export Engine
+
+⸻
+
+Future Version Roadmap
+
+Version 0.2
+
+AI Pack Designer
+
+Prompt:
+
+Create a medieval RPG modpack
+
+Output:
+
+Suggested mods
+Dependency graph
+
+⸻
+
+Version 0.3
+
+Crash Doctor
+
+Input:
+
+latest.log
+
+Output:
+
+Root cause analysis
+
+Suggested fixes
+
+⸻
+
+Version 0.4
+
+Pack Simulation
+
+Analyze:
+
+Performance
+
+Memory usage
+
+Potential conflicts
+
+Estimated startup time
+
+⸻
+
+Version 0.5
+
+Cloud Workspace
+
+Projects stored online.
+
+Share links.
+
+Collaborative editing.
+
+⸻
+
+Success Metrics
+
+Project creation count
+
+Export count
+
+Average mods per project
+
+Conflict detection accuracy
+
+Weekly active creators
+
+⸻
+
+Ultimate Goal
+
+Become the standard visual development environment for Minecraft modpack creators.
+
+Not another launcher.
+
+Not another mod manager.
+
+A professional creation platform.
+
+
+
+
+MODCANVAS MASTER SPECIFICATION
+
+Version 1.0
+
+⸻
+
+Project
+
+ModCanvas
+
+Design Minecraft Modpacks Visually.
+
+⸻
+
+Product Definition
+
+ModCanvas is a professional visual development environment for Minecraft modpack creators.
+
+It is not a launcher.
+
+It is not a mod manager.
+
+It is not another CurseForge clone.
+
+ModCanvas is a design tool.
+
+The purpose of ModCanvas is to allow creators to visually build, analyze, validate and export Minecraft modpacks through a modern graph-based workflow.
+
+Think:
+
+Figma for Minecraft Modpacks.
+
+⸻
+
+Vision
+
+Minecraft modpack creation is currently fragmented and overly technical.
+
+Creators must manually:
+
+* search mods
+* discover dependencies
+* resolve conflicts
+* check version compatibility
+* debug crashes
+* package exports
+
+ModCanvas transforms this process into a visual engineering workflow.
+
+The long-term goal is to become the industry-standard IDE for Minecraft modpack development.
+
+⸻
+
+Core Philosophy
+
+Visual First
+
+Everything should be represented visually whenever possible.
+
+Avoid giant tables.
+
+Avoid overwhelming text lists.
+
+Prefer graphs, relationships, hierarchy and spatial organization.
+
+⸻
+
+Engineering Mindset
+
+Users should feel they are designing a system.
+
+Not downloading files.
+
+Not managing folders.
+
+Designing an interconnected ecosystem.
+
+⸻
+
+Professional Tools
+
+Reference products:
+
+* Final Cut Pro
+* Xcode
+* Linear
+* Figma
+* Logic Pro
+
+Do not imitate:
+
+* CurseForge
+* MultiMC
+* Legacy Minecraft launchers
+
+⸻
+
+Target Users
+
+Primary
+
+Professional Modpack Creators
+
+Examples:
+
+* CurseForge authors
+* Modrinth authors
+* SMP operators
+* YouTubers
+* Technical Minecraft communities
+
+⸻
+
+Secondary
+
+Advanced Players
+
+People managing:
+
+* 50+ mods
+* private packs
+* custom servers
+
+⸻
+
+Supported Ecosystem
+
+Minecraft Versions
+
+* 1.16+
+* 1.18+
+* 1.20+
+* 1.21+
+
+Loaders
+
+* Forge
+* NeoForge
+* Fabric
+* Quilt
+
+Platforms
+
+* Modrinth
+* CurseForge
+
+⸻
+
+User Journey
+
+Create Project
+
+↓
+
+Choose Minecraft Version
+
+↓
+
+Choose Loader
+
+↓
+
+Search Mods
+
+↓
+
+Visualize Dependencies
+
+↓
+
+Validate Pack
+
+↓
+
+Resolve Issues
+
+↓
+
+Export
+
+⸻
+
+MVP Features
+
+Version 0.1
+
+⸻
+
+Project Workspace
+
+Users can create and manage modpack projects.
+
+Project Metadata:
+
+* Name
+* Description
+* Minecraft Version
+* Loader
+* Author
+* Tags
+
+Example:
+
+Project:
+Industrial Revolution
+
+Minecraft:
+1.21.1
+
+Loader:
+NeoForge
+
+⸻
+
+Mod Discovery
+
+Integrated search system.
+
+Sources:
+
+* Modrinth API
+* CurseForge API
+
+Capabilities:
+
+* search
+* filter
+* sort
+* preview
+
+Results should display:
+
+* icon
+* name
+* author
+* description
+* downloads
+* supported versions
+
+Users can add mods directly into a project.
+
+⸻
+
+Dependency Engine
+
+Core backend system.
+
+Responsibilities:
+
+* dependency resolution
+* optional dependency detection
+* circular dependency detection
+* version compatibility analysis
+
+Output should be structured and deterministic.
+
+⸻
+
+Graph Canvas
+
+Primary product experience.
+
+Visual representation of mod relationships.
+
+Node Types:
+
+* Mod
+* Library
+* API
+* Loader
+
+Edge Types:
+
+* Required
+* Optional
+* Conflict
+
+Canvas Features:
+
+* zoom
+* pan
+* auto layout
+* search node
+* focus node
+* collapse subtree
+
+The graph should be the center of the application.
+
+⸻
+
+Diagnostics System
+
+Analyze project health.
+
+Checks:
+
+* missing dependencies
+* version mismatch
+* incompatible mods
+* duplicate functionality
+* loader conflicts
+
+Severity:
+
+INFO
+
+WARNING
+
+CRITICAL
+
+Each issue should provide:
+
+* explanation
+* affected mods
+* suggested fix
+
+⸻
+
+Inspector Panel
+
+Selecting any node opens inspector.
+
+Displays:
+
+Name
+
+Description
+
+Author
+
+Dependencies
+
+Versions
+
+License
+
+Supported Minecraft Versions
+
+Homepage
+
+Repository
+
+Changelog
+
+⸻
+
+Export System
+
+Export Formats:
+
+* Modrinth Pack
+* CurseForge Pack
+* Prism Launcher Pack
+* ZIP Archive
+
+Generated Files:
+
+manifest
+
+metadata
+
+dependency information
+
+version data
+
+⸻
+
+Future Features
+
+Version 0.2
+
+AI Modpack Designer
+
+Prompt:
+
+Build a medieval fantasy RPG pack
+
+Output:
+
+Recommended mods
+
+Dependency graph
+
+Compatibility validation
+
+Estimated performance
+
+⸻
+
+Version 0.3
+
+Crash Doctor
+
+Input:
+
+latest.log
+
+crash-report.txt
+
+Output:
+
+Root Cause Analysis
+
+Fix Suggestions
+
+Known Issue References
+
+⸻
+
+Version 0.4
+
+Pack Simulation
+
+Predict:
+
+RAM usage
+
+Startup time
+
+Performance impact
+
+Potential instability
+
+⸻
+
+Version 0.5
+
+Cloud Workspace
+
+Features:
+
+Project Sync
+
+Version History
+
+Sharing
+
+Collaboration
+
+⸻
+
+Design Language
+
+Codename:
+
+Industrial Minimalism
+
+⸻
+
+Emotional Goals
+
+Users should feel:
+
+Professional
+
+Focused
+
+Powerful
+
+Precise
+
+Calm
+
+⸻
+
+Keywords
+
+Engineering
+
+Spatial
+
+Modern
+
+Minimal
+
+Technical
+
+Elegant
+
+⸻
+
+Visual References
+
+40%
+
+Apple Pro Apps
+
+30%
+
+Linear
+
+20%
+
+Figma
+
+10%
+
+Minecraft Technology Mods
+
+Examples:
+
+Create
+
+Applied Energistics 2
+
+Mekanism
+
+⸻
+
+Color System
+
+Background
+
+#09090B
+
+Surface
+
+#111113
+
+Elevated Surface
+
+#18181B
+
+Primary Text
+
+#FAFAFA
+
+Secondary Text
+
+#A1A1AA
+
+Accent
+
+#D4A017
+
+Alternative Accent
+
+#FFCC66
+
+Danger
+
+#EF4444
+
+Warning
+
+#F59E0B
+
+Success
+
+#22C55E
+
+⸻
+
+Typography
+
+Headings
+
+SF Pro Display
+
+Fallback:
+Inter Tight
+
+Body
+
+Inter
+
+Data
+
+JetBrains Mono
+
+⸻
+
+Layout System
+
+Sidebar
+
+240px
+
+Canvas
+
+Flexible
+
+Inspector
+
+320px
+
+Grid
+
+8px base spacing system
+
+⸻
+
+Motion System
+
+Animation Duration
+
+150ms–250ms
+
+Preferred
+
+Spring animations
+
+Fade transitions
+
+Scale transitions
+
+Avoid
+
+Bounce
+
+Overshoot
+
+Excessive motion
+
+⸻
+
+Technology Stack
+
+Frontend
+
+Tauri v2
+
+React
+
+TypeScript
+
+TailwindCSS
+
+Framer Motion
+
+React Flow
+
+Zustand
+
+TanStack Query
+
+⸻
+
+Backend
+
+Rust
+
+Tokio
+
+Serde
+
+Reqwest
+
+SQLite
+
+⸻
+
+Architecture
+
+Frontend
+
+↓
+
+IPC Layer
+
+↓
+
+Rust Core
+
+↓
+
+Dependency Engine
+
+↓
+
+Diagnostics Engine
+
+↓
+
+Export Engine
+
+⸻
+
+Development Priorities
+
+Priority 1
+
+Project System
+
+Priority 2
+
+Mod Search
+
+Priority 3
+
+Dependency Engine
+
+Priority 4
+
+Graph Canvas
+
+Priority 5
+
+Diagnostics
+
+Priority 6
+
+Export
+
+Priority 7
+
+AI Features
+
+⸻
+
+Agent Instructions
+
+This project must never feel like a launcher.
+
+This project must never resemble a traditional dashboard.
+
+The graph canvas is the product.
+
+Every design decision should reinforce:
+
+clarity
+
+precision
+
+engineering quality
+
+visual hierarchy
+
+professional workflows
+
+When uncertain, prioritize simplicity and spatial organization over feature density.
+
+The graph experience is more important than adding additional functionality.
+
+⸻
+
+Ultimate Goal
+
+Become the standard professional environment for Minecraft modpack creation.
+
+Design Minecraft Modpacks Visually.
