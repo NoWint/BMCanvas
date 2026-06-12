@@ -21,36 +21,36 @@ export function ProjectList() {
   };
 
   if (loading && projects.length === 0) {
-    return <p className="text-text-tertiary text-sm mt-6">Loading...</p>;
+    return <p className="text-muted text-sm mt-6">Loading...</p>;
   }
 
   if (projects.length === 0) {
     return (
       <div className="mt-10 text-center">
-        <p className="text-text-tertiary text-sm">No projects yet</p>
-        <p className="text-text-tertiary text-xs mt-1">Create your first modpack above</p>
+        <p className="text-muted text-sm">No projects yet</p>
+        <p className="text-muted text-xs mt-1">Create your first modpack above</p>
       </div>
     );
   }
 
   return (
     <div className="mt-6 space-y-2">
-      <h2 className="text-xs text-text-tertiary uppercase tracking-wider font-mono mb-3">Your Projects</h2>
+      <h2 className="text-xs text-muted uppercase tracking-wider font-mono mb-3">Your Projects</h2>
       {projects.map((project) => (
         <div
           key={project.id}
-          className="bg-surface rounded-lg p-4 border border-separator hover:border-accent/30 transition-all duration-150 group"
+          className="bg-surface rounded-lg p-4 border border-sep hover:border-accent/30 transition-all duration-150 group"
         >
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <h3 className="font-heading font-semibold text-text-primary text-sm truncate">
+              <h3 className="font-heading font-semibold text-primary text-sm truncate">
                 {project.name}
               </h3>
-              <p className="text-[11px] font-mono text-text-tertiary mt-0.5">
+              <p className="text-[11px] font-mono text-muted mt-0.5">
                 {project.mc_version} / {project.loader}
               </p>
               {project.description && (
-                <p className="text-xs text-text-tertiary mt-1.5 line-clamp-1">
+                <p className="text-xs text-muted mt-1.5 line-clamp-1">
                   {project.description}
                 </p>
               )}

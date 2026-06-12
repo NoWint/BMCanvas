@@ -41,7 +41,7 @@ export function SearchResults({ query }: SearchResultsProps) {
     return (
       <div className="mt-6 space-y-2">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-surface rounded-lg p-4 border border-separator animate-pulse">
+          <div key={i} className="bg-surface rounded-lg p-4 border border-sep animate-pulse">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-elevated" />
               <div className="flex-1">
@@ -60,38 +60,38 @@ export function SearchResults({ query }: SearchResultsProps) {
   }
 
   if (!data || data.hits.length === 0) {
-    return <p className="text-text-tertiary text-sm mt-4">No results found</p>;
+    return <p className="text-muted text-sm mt-4">No results found</p>;
   }
 
   return (
     <div className="mt-6">
-      <p className="text-[11px] font-mono text-text-tertiary mb-3">{data.total_hits} results</p>
+      <p className="text-[11px] font-mono text-muted mb-3">{data.total_hits} results</p>
       <div className="space-y-1.5">
         {data.hits.map((hit) => {
           const added = isModAdded(hit);
           return (
             <div
               key={hit.project_id}
-              className="bg-surface rounded-lg p-3.5 border border-separator hover:border-separator hover:bg-elevated/50 transition-all duration-150 flex items-start gap-3 group"
+              className="bg-surface rounded-lg p-3.5 border border-sep hover:border-sep hover:bg-elevated/50 transition-all duration-150 flex items-start gap-3 group"
             >
               {hit.icon_url ? (
                 <img src={hit.icon_url} alt={hit.title} className="w-9 h-9 rounded-lg flex-shrink-0" />
               ) : (
-                <div className="w-9 h-9 rounded-lg bg-elevated flex items-center justify-center text-text-tertiary text-xs font-heading font-bold flex-shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-elevated flex items-center justify-center text-muted text-xs font-heading font-bold flex-shrink-0">
                   {hit.title[0]}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-text-primary text-sm truncate">{hit.title}</h3>
-                <p className="text-[11px] text-text-tertiary mt-0.5">by {hit.author ?? 'Unknown'}</p>
+                <h3 className="font-medium text-primary text-sm truncate">{hit.title}</h3>
+                <p className="text-[11px] text-muted mt-0.5">by {hit.author ?? 'Unknown'}</p>
                 {hit.description && (
-                  <p className="text-xs text-text-tertiary mt-1 line-clamp-1">{hit.description}</p>
+                  <p className="text-xs text-muted mt-1 line-clamp-1">{hit.description}</p>
                 )}
                 <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   {hit.loaders.slice(0, 3).map((l) => (
-                    <span key={l} className="text-[10px] font-mono px-1.5 py-0.5 bg-elevated rounded text-text-tertiary">{l}</span>
+                    <span key={l} className="text-[10px] font-mono px-1.5 py-0.5 bg-elevated rounded text-muted">{l}</span>
                   ))}
-                  <span className="text-[10px] font-mono text-text-tertiary flex items-center gap-1">
+                  <span className="text-[10px] font-mono text-muted flex items-center gap-1">
                     <DownloadSimple size={10} />
                     {(hit.downloads ?? 0).toLocaleString()}
                   </span>

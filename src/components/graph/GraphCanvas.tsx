@@ -122,7 +122,7 @@ export function GraphCanvas() {
 
   if (!currentProject) {
     return (
-      <div className="h-full flex items-center justify-center text-text-tertiary">
+      <div className="h-full flex items-center justify-center text-muted">
         Select a project to view its dependency graph
       </div>
     );

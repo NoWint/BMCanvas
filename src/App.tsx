@@ -22,13 +22,13 @@ export default function App() {
   const criticalCount = diagnostics.filter((d) => d.severity === 'critical').length;
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-base">
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <Canvas />
         <Inspector />
       </div>
-      <footer className="h-6 bg-surface border-t border-separator flex items-center px-4 text-[10px] font-mono text-text-tertiary gap-4">
+      <footer className="h-6 bg-surface border-t border-sep flex items-center px-4 text-[10px] font-mono text-muted gap-4">
         {currentProject ? (
           <>
             <span>{mods.length} mods</span>

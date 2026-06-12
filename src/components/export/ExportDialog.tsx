@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PackageExport, CheckCircle, WarningCircle } from '@phosphor-icons/react';
+import { Export, CheckCircle, WarningCircle } from '@phosphor-icons/react';
 import { useProjectStore } from '../../stores/projectStore';
 import { invoke } from '@tauri-apps/api/core';
 import type { ExportFormat } from '../../types';
@@ -45,19 +45,19 @@ export function ExportDialog() {
   if (!currentProject) {
     return (
       <div className="p-8 max-w-3xl mx-auto">
-        <h2 className="text-lg font-heading font-semibold text-text-primary mb-4">Export</h2>
-        <p className="text-text-tertiary text-sm">Select a project to export</p>
+        <h2 className="text-lg font-heading font-semibold text-primary mb-4">Export</h2>
+        <p className="text-muted text-sm">Select a project to export</p>
       </div>
     );
   }
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <h2 className="text-lg font-heading font-semibold text-text-primary mb-5">Export Pack</h2>
+      <h2 className="text-lg font-heading font-semibold text-primary mb-5">Export Pack</h2>
 
-      <div className="bg-surface rounded-xl p-5 border border-separator">
+      <div className="bg-surface rounded-xl p-5 border border-sep">
         <div className="mb-5">
-          <p className="text-xs font-mono text-text-tertiary">
+          <p className="text-xs font-mono text-muted">
             {currentProject.name} / {currentProject.mc_version} / {currentProject.loader} / {mods.length} mods
           </p>
         </div>
@@ -70,13 +70,13 @@ export function ExportDialog() {
               className={`w-full text-left px-4 py-3 rounded-lg border transition-all duration-150
                 ${selectedFormat === fmt.key
                   ? 'border-accent bg-accent/5'
-                  : 'border-separator bg-elevated hover:border-text-tertiary'
+                  : 'border-sep bg-elevated hover:border-muted'
                 }`}
             >
-              <span className={`text-sm font-medium ${selectedFormat === fmt.key ? 'text-accent' : 'text-text-primary'}`}>
+              <span className={`text-sm font-medium ${selectedFormat === fmt.key ? 'text-accent' : 'text-primary'}`}>
                 {fmt.label}
               </span>
-              <p className="text-[11px] text-text-tertiary mt-0.5 font-mono">{fmt.ext}</p>
+              <p className="text-[11px] text-muted mt-0.5 font-mono">{fmt.ext}</p>
             </button>
           ))}
         </div>
@@ -84,9 +84,9 @@ export function ExportDialog() {
         <button
           onClick={handleExport}
           disabled={exporting || mods.length === 0}
-          className="w-full py-2.5 bg-accent text-bg font-medium text-sm rounded-lg hover:bg-accent-light disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150 active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-accent text-bg font-medium text-sm rounded-lg hover:bg-accentlight disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150 active:scale-[0.98] flex items-center justify-center gap-2"
         >
-          <PackageExport size={16} weight="fill" />
+          <Export size={16} weight="fill" />
           {exporting ? 'Exporting...' : 'Export'}
         </button>
 
@@ -95,7 +95,7 @@ export function ExportDialog() {
             <CheckCircle size={16} className="text-success" weight="fill" />
             <div>
               <p className="text-sm text-success font-medium">Export successful</p>
-              <p className="text-[11px] font-mono text-text-tertiary mt-0.5">{result}</p>
+              <p className="text-[11px] font-mono text-muted mt-0.5">{result}</p>
             </div>
           </div>
         )}
@@ -105,7 +105,7 @@ export function ExportDialog() {
             <WarningCircle size={16} className="text-danger" weight="fill" />
             <div>
               <p className="text-sm text-danger font-medium">Export failed</p>
-              <p className="text-[11px] font-mono text-text-tertiary mt-0.5">{error}</p>
+              <p className="text-[11px] font-mono text-muted mt-0.5">{error}</p>
             </div>
           </div>
         )}

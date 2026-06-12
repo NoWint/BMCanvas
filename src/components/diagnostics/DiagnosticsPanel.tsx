@@ -26,8 +26,8 @@ export function DiagnosticsPanel() {
   if (!currentProject) {
     return (
       <div className="p-8 max-w-3xl mx-auto">
-        <h2 className="text-lg font-heading font-semibold text-text-primary mb-4">Diagnostics</h2>
-        <p className="text-text-tertiary text-sm">Select a project to run diagnostics</p>
+        <h2 className="text-lg font-heading font-semibold text-primary mb-4">Diagnostics</h2>
+        <p className="text-muted text-sm">Select a project to run diagnostics</p>
       </div>
     );
   }
@@ -35,17 +35,17 @@ export function DiagnosticsPanel() {
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-heading font-semibold text-text-primary">Diagnostics</h2>
-        <span className="text-[11px] font-mono text-text-tertiary">
+        <h2 className="text-lg font-heading font-semibold text-primary">Diagnostics</h2>
+        <span className="text-[11px] font-mono text-muted">
           {diagnostics.length} issue{diagnostics.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {diagnostics.length === 0 ? (
-        <div className="bg-surface rounded-xl p-8 text-center border border-separator">
+        <div className="bg-surface rounded-xl p-8 text-center border border-sep">
           <CheckCircle size={32} className="text-success mx-auto mb-3" weight="fill" />
           <p className="text-success font-medium text-sm">All checks passed</p>
-          <p className="text-text-tertiary text-xs mt-1">No conflicts or issues detected</p>
+          <p className="text-muted text-xs mt-1">No conflicts or issues detected</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -60,8 +60,8 @@ export function DiagnosticsPanel() {
                 <div className="flex items-start gap-3">
                   <Icon size={18} className={`${config.color} mt-0.5 flex-shrink-0`} weight="fill" />
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-text-primary">{diag.title}</h3>
-                    <p className="text-xs text-text-secondary mt-1">{diag.description}</p>
+                    <h3 className="text-sm font-medium text-primary">{diag.title}</h3>
+                    <p className="text-xs text-secondary mt-1">{diag.description}</p>
                     <p className="text-xs text-accent mt-1.5 font-mono">Fix: {diag.suggestedFix}</p>
                   </div>
                 </div>

@@ -41,7 +41,7 @@ export function Canvas() {
   };
 
   return (
-    <main className="flex-1 h-full bg-bg overflow-auto">
+    <main className="flex-1 h-full bg-base overflow-auto">
       {renderContent()}
     </main>
   );

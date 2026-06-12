@@ -3,7 +3,7 @@ import {
   MagnifyingGlass,
   Graph,
   Warning,
-  PackageExport,
+  Export,
 } from '@phosphor-icons/react';
 import { useUiStore } from '../../stores/uiStore';
 import { useProjectStore } from '../../stores/projectStore';
@@ -14,7 +14,7 @@ const NAV_ITEMS: { key: ViewType; label: string; Icon: typeof FolderSimple }[] =
   { key: 'discover', label: 'Discover', Icon: MagnifyingGlass },
   { key: 'graph', label: 'Graph', Icon: Graph },
   { key: 'diagnostics', label: 'Diagnostics', Icon: Warning },
-  { key: 'export', label: 'Export', Icon: PackageExport },
+  { key: 'export', label: 'Export', Icon: Export },
 ];
 
 export function Sidebar() {
@@ -24,12 +24,12 @@ export function Sidebar() {
   const mods = useProjectStore((s) => s.mods);
 
   return (
-    <aside className="w-60 h-full bg-surface flex flex-col border-r border-separator">
+    <aside className="w-60 h-full bg-surface flex flex-col border-r border-sep">
       <div className="px-5 pt-5 pb-4">
-        <h1 className="text-base font-heading font-bold text-text-primary tracking-tight">
+        <h1 className="text-base font-heading font-bold text-primary tracking-tight">
           ModCanvas
         </h1>
-        <p className="text-[11px] text-text-tertiary mt-0.5 font-mono">
+        <p className="text-[11px] text-muted mt-0.5 font-mono">
           v0.1.0
         </p>
       </div>
@@ -42,7 +42,7 @@ export function Sidebar() {
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] transition-all duration-150
               ${activeView === key
                 ? 'bg-elevated text-accent font-medium'
-                : 'text-text-secondary hover:bg-elevated/60 hover:text-text-primary'
+                : 'text-secondary hover:bg-elevated/60 hover:text-primary'
               }`}
           >
             <Icon size={18} weight={activeView === key ? 'fill' : 'regular'} />
@@ -52,10 +52,10 @@ export function Sidebar() {
       </nav>
 
       {currentProject && (
-        <div className="mx-3 mb-3 p-3 bg-elevated rounded-lg border border-separator">
-          <p className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Active</p>
-          <p className="text-[13px] font-medium text-text-primary mt-1 truncate">{currentProject.name}</p>
-          <p className="text-[11px] text-text-tertiary mt-0.5 font-mono">
+        <div className="mx-3 mb-3 p-3 bg-elevated rounded-lg border border-sep">
+          <p className="text-[10px] text-muted uppercase tracking-wider font-mono">Active</p>
+          <p className="text-[13px] font-medium text-primary mt-1 truncate">{currentProject.name}</p>
+          <p className="text-[11px] text-muted mt-0.5 font-mono">
             {currentProject.mc_version} / {currentProject.loader} / {mods.length} mods
           </p>
         </div>
