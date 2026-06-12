@@ -1,10 +1,16 @@
 import { useState } from 'react';
+import { Plus, CaretDown, CaretUp } from '@phosphor-icons/react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUiStore } from '../../stores/uiStore';
 import type { Loader } from '../../types';
 
 const MC_VERSIONS = ['1.21.1', '1.21', '1.20.6', '1.20.4', '1.20.1', '1.19.4', '1.19.2', '1.18.2', '1.16.5'];
-const LOADERS: Loader[] = ['forge', 'neoforge', 'fabric', 'quilt'];
+const LOADERS: { value: Loader; label: string }[] = [
+  { value: 'forge', label: 'Forge' },
+  { value: 'neoforge', label: 'NeoForge' },
+  { value: 'fabric', label: 'Fabric' },
+  { value: 'quilt', label: 'Quilt' },
+];
 
 export function ProjectCreate() {
   const createProject = useProjectStore((s) => s.createProject);
@@ -37,44 +43,47 @@ export function ProjectCreate() {
   };
 
   return (
-    <div className="bg-surface rounded-xl p-5 shadow-sm border border-separator/50">
+    <div className="bg-surface rounded-xl border border-separator overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-elevated/50 transition-colors"
       >
-        <h2 className="text-lg font-semibold text-text-primary font-heading">Create New Pack</h2>
-        <span className="text-text-tertiary text-xl">{expanded ? '−' : '+'}</span>
+        <div className="flex items-center gap-3">
+          <Plus size={18} className="text-accent" weight="bold" />
+          <span className="text-sm font-heading font-semibold text-text-primary">Create New Pack</span>
+        </div>
+        {expanded ? <CaretUp size={14} className="text-text-tertiary" /> : <CaretDown size={14} className="text-text-tertiary" />}
       </button>
 
       {expanded && (
-        <div className="mt-4 space-y-3">
+        <div className="px-5 pb-5 space-y-4 border-t border-separator pt-4">
           <div>
-            <label className="text-xs text-text-tertiary uppercase tracking-wider">Name</label>
+            <label className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Tech Revolution"
-              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
+              className="w-full mt-1.5 px-3 py-2 bg-elevated rounded-lg border border-separator text-text-primary text-sm placeholder:text-text-tertiary focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-xs text-text-tertiary uppercase tracking-wider">Description</label>
+            <label className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Description</label>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Technology-focused progression pack"
-              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
+              className="w-full mt-1.5 px-3 py-2 bg-elevated rounded-lg border border-separator text-text-primary text-sm placeholder:text-text-tertiary focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="text-xs text-text-tertiary uppercase tracking-wider">Minecraft Version</label>
+              <label className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">MC Version</label>
               <select
                 value={mcVersion}
                 onChange={(e) => setMcVersion(e.target.value)}
-                className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent"
+                className="w-full mt-1.5 px-3 py-2 bg-elevated rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent appearance-none"
               >
                 {MC_VERSIONS.map((v) => (
                   <option key={v} value={v}>{v}</option>
@@ -82,33 +91,33 @@ export function ProjectCreate() {
               </select>
             </div>
             <div className="flex-1">
-              <label className="text-xs text-text-tertiary uppercase tracking-wider">Loader</label>
+              <label className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Loader</label>
               <select
                 value={loader}
                 onChange={(e) => setLoader(e.target.value as Loader)}
-                className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent"
+                className="w-full mt-1.5 px-3 py-2 bg-elevated rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent appearance-none"
               >
                 {LOADERS.map((l) => (
-                  <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>
+                  <option key={l.value} value={l.value}>{l.label}</option>
                 ))}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-text-tertiary uppercase tracking-wider">Author</label>
+            <label className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Author</label>
             <input
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               placeholder="Your name"
-              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
+              className="w-full mt-1.5 px-3 py-2 bg-elevated rounded-lg border border-separator text-text-primary text-sm placeholder:text-text-tertiary focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <button
             onClick={handleCreate}
             disabled={!name.trim()}
-            className="w-full py-2.5 bg-accent text-white font-medium rounded-lg hover:bg-accent-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
+            className="w-full py-2.5 bg-accent text-bg font-medium text-sm rounded-lg hover:bg-accent-light disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150 active:scale-[0.98]"
           >
             Create Pack
           </button>

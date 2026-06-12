@@ -11,21 +11,20 @@ import { ExportDialog } from '../export/ExportDialog';
 
 export function Canvas() {
   const activeView = useUiStore((s) => s.activeView);
-  const currentProject = useProjectStore((s) => s.currentProject);
   const [searchQuery, setSearchQuery] = useState('');
 
   const renderContent = () => {
     switch (activeView) {
       case 'projects':
         return (
-          <div className="p-6 max-w-3xl mx-auto">
+          <div className="p-8 max-w-2xl mx-auto">
             <ProjectCreate />
             <ProjectList />
           </div>
         );
       case 'discover':
         return (
-          <div className="p-6 max-w-4xl mx-auto">
+          <div className="p-8 max-w-3xl mx-auto">
             <SearchBar onSearch={setSearchQuery} />
             <SearchResults query={searchQuery} />
           </div>
@@ -42,7 +41,7 @@ export function Canvas() {
   };
 
   return (
-    <main className="flex-1 h-full bg-background overflow-auto">
+    <main className="flex-1 h-full bg-bg overflow-auto">
       {renderContent()}
     </main>
   );

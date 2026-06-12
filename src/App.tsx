@@ -22,23 +22,23 @@ export default function App() {
   const criticalCount = diagnostics.filter((d) => d.severity === 'critical').length;
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-bg">
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <Canvas />
         <Inspector />
       </div>
-      <footer className="h-7 bg-surface border-t border-separator flex items-center px-4 text-[11px] text-text-tertiary gap-4">
+      <footer className="h-6 bg-surface border-t border-separator flex items-center px-4 text-[10px] font-mono text-text-tertiary gap-4">
         {currentProject ? (
           <>
             <span>{mods.length} mods</span>
-            <span>{deps.length} dependencies</span>
-            {warningCount > 0 && <span className="text-warning">{warningCount} warnings</span>}
-            {criticalCount > 0 && <span className="text-danger">{criticalCount} critical</span>}
-            {diagnostics.length === 0 && <span className="text-success">All checks passed</span>}
+            <span>{deps.length} deps</span>
+            {warningCount > 0 && <span className="text-warning">{warningCount} warn</span>}
+            {criticalCount > 0 && <span className="text-danger">{criticalCount} crit</span>}
+            {diagnostics.length === 0 && <span className="text-success">ok</span>}
           </>
         ) : (
-          <span>No project selected</span>
+          <span>No project</span>
         )}
       </footer>
     </div>

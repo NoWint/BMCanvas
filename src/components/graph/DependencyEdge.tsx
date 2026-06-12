@@ -26,17 +26,17 @@ export function DependencyEdge({
   const isIncompatible = depType === 'incompatible';
   const isOptional = depType === 'optional';
 
-  let stroke = '#8E8E93';
+  let stroke = '#71717A';
   let strokeDasharray = '';
-  let strokeWidth = 1.5;
+  let strokeWidth = 1;
 
   if (isIncompatible) {
-    stroke = '#FF3B30';
-    strokeDasharray = '6 3';
-    strokeWidth = 2;
+    stroke = '#EF4444';
+    strokeDasharray = '5 3';
+    strokeWidth = 1.5;
   } else if (isOptional) {
-    stroke = '#AEAEB2';
-    strokeDasharray = '4 4';
+    stroke = '#52525B';
+    strokeDasharray = '3 3';
   }
 
   return (
@@ -45,7 +45,7 @@ export function DependencyEdge({
       path={edgePath}
       style={{
         stroke,
-        strokeWidth: selected ? strokeWidth + 1 : strokeWidth,
+        strokeWidth: selected ? strokeWidth + 0.5 : strokeWidth,
         strokeDasharray,
       }}
     />

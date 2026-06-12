@@ -1,3 +1,4 @@
+import { MagnifyingGlass, Plus, Minus, ArrowsOut } from '@phosphor-icons/react';
 import { useReactFlow } from 'reactflow';
 import { useGraphStore } from '../../stores/graphStore';
 
@@ -20,38 +21,38 @@ export function GraphControls() {
   };
 
   return (
-    <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10">
+    <div className="absolute bottom-4 left-4 flex items-center gap-1.5 z-10">
       <form onSubmit={handleSearch} className="flex items-center gap-1">
-        <input
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search node..."
-          className="px-3 py-1.5 bg-surface rounded-lg border border-separator text-text-primary text-xs focus:outline-none focus:border-accent transition-colors w-40"
-        />
-        <button
-          type="submit"
-          className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
-        >
-          Find
-        </button>
+        <div className="relative">
+          <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-tertiary" />
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search node..."
+            className="pl-7 pr-2 py-1.5 bg-surface/90 backdrop-blur-sm rounded-md border border-separator text-text-primary text-[11px] focus:outline-none focus:border-accent transition-colors w-32"
+          />
+        </div>
       </form>
       <button
         onClick={() => fitView({ padding: 0.2 })}
-        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
+        className="p-1.5 bg-surface/90 backdrop-blur-sm rounded-md border border-separator text-text-tertiary hover:text-text-primary hover:border-accent/30 transition-colors"
+        title="Fit view"
       >
-        Fit
+        <ArrowsOut size={14} />
       </button>
       <button
         onClick={() => zoomIn()}
-        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
+        className="p-1.5 bg-surface/90 backdrop-blur-sm rounded-md border border-separator text-text-tertiary hover:text-text-primary hover:border-accent/30 transition-colors"
+        title="Zoom in"
       >
-        +
+        <Plus size={14} />
       </button>
       <button
         onClick={() => zoomOut()}
-        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
+        className="p-1.5 bg-surface/90 backdrop-blur-sm rounded-md border border-separator text-text-tertiary hover:text-text-primary hover:border-accent/30 transition-colors"
+        title="Zoom out"
       >
-        −
+        <Minus size={14} />
       </button>
     </div>
   );

@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #F2F2F7;
-  --color-surface: #FFFFFF;
-  --color-separator: #C6C6C8;
-  --color-text-primary: #1C1C1E;
-  --color-text-secondary: #8E8E93;
-  --color-text-tertiary: #AEAEB2;
+  --color-bg: #09090B;
+  --color-surface: #111113;
+  --color-elevated: #18181B;
+  --color-separator: #27272A;
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-text-tertiary: #71717A;
   --color-accent: #D4A017;
   --color-accent-light: #FFCC66;
-  --color-danger: #FF3B30;
-  --color-warning: #FF9500;
-  --color-success: #34C759;
-  --color-info: #007AFF;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+  --color-info: #3B82F6;
   --color-node-mod: #D4A017;
-  --color-node-library: #007AFF;
+  --color-node-library: #3B82F6;
   --color-node-api: #8B5CF6;
-  --color-node-loader: #34C759;
+  --color-node-loader: #22C55E;
 
   --font-heading: "SF Pro Display", "Inter Tight", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 * {
@@ -35,12 +36,12 @@ html, body, #root {
   overflow: hidden;
   font-family: var(--font-body);
   color: var(--color-text-primary);
-  background: var(--color-background);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -53,5 +54,40 @@ html, body, #root {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-secondary);
+  background: var(--color-text-tertiary);
+}
+
+/* ReactFlow overrides for dark theme */
+.react-flow__background {
+  background: var(--color-bg) !important;
+}
+
+.react-flow__minimap {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-separator) !important;
+  border-radius: 8px !important;
+}
+
+.react-flow__controls {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-separator) !important;
+  border-radius: 8px !important;
+}
+
+.react-flow__controls button {
+  background: var(--color-surface) !important;
+  color: var(--color-text-secondary) !important;
+  border-bottom: 1px solid var(--color-separator) !important;
+}
+
+.react-flow__controls button:hover {
+  background: var(--color-elevated) !important;
+}
+
+.react-flow__edge-path {
+  stroke: var(--color-text-tertiary) !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
 }

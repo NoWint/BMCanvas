@@ -1,13 +1,20 @@
+import {
+  FolderSimple,
+  MagnifyingGlass,
+  Graph,
+  Warning,
+  PackageExport,
+} from '@phosphor-icons/react';
 import { useUiStore } from '../../stores/uiStore';
 import { useProjectStore } from '../../stores/projectStore';
 import type { ViewType } from '../../types';
 
-const NAV_ITEMS: { key: ViewType; label: string; icon: string }[] = [
-  { key: 'projects', label: 'Projects', icon: '📁' },
-  { key: 'discover', label: 'Discover', icon: '🔍' },
-  { key: 'graph', label: 'Graph', icon: '🔗' },
-  { key: 'diagnostics', label: 'Diagnostics', icon: '⚠️' },
-  { key: 'export', label: 'Export', icon: '📦' },
+const NAV_ITEMS: { key: ViewType; label: string; Icon: typeof FolderSimple }[] = [
+  { key: 'projects', label: 'Projects', Icon: FolderSimple },
+  { key: 'discover', label: 'Discover', Icon: MagnifyingGlass },
+  { key: 'graph', label: 'Graph', Icon: Graph },
+  { key: 'diagnostics', label: 'Diagnostics', Icon: Warning },
+  { key: 'export', label: 'Export', Icon: PackageExport },
 ];
 
 export function Sidebar() {
@@ -17,37 +24,39 @@ export function Sidebar() {
   const mods = useProjectStore((s) => s.mods);
 
   return (
-    <aside className="w-60 h-full bg-background flex flex-col border-r border-separator">
-      <div className="px-5 py-4 border-b border-separator">
-        <h1 className="text-lg font-bold text-text-primary tracking-tight font-heading">
+    <aside className="w-60 h-full bg-surface flex flex-col border-r border-separator">
+      <div className="px-5 pt-5 pb-4">
+        <h1 className="text-base font-heading font-bold text-text-primary tracking-tight">
           ModCanvas
         </h1>
-        <p className="text-xs text-text-tertiary mt-0.5">Design Modpacks Visually</p>
+        <p className="text-[11px] text-text-tertiary mt-0.5 font-mono">
+          v0.1.0
+        </p>
       </div>
 
-      <nav className="flex-1 py-2">
-        {NAV_ITEMS.map((item) => (
+      <nav className="flex-1 px-2 py-1">
+        {NAV_ITEMS.map(({ key, label, Icon }) => (
           <button
-            key={item.key}
-            onClick={() => setActiveView(item.key)}
-            className={`w-full flex items-center gap-3 px-5 py-2.5 text-sm transition-colors duration-150
-              ${activeView === item.key
-                ? 'bg-surface text-accent font-medium shadow-sm'
-                : 'text-text-secondary hover:bg-surface/60 hover:text-text-primary'
+            key={key}
+            onClick={() => setActiveView(key)}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] transition-all duration-150
+              ${activeView === key
+                ? 'bg-elevated text-accent font-medium'
+                : 'text-text-secondary hover:bg-elevated/60 hover:text-text-primary'
               }`}
           >
-            <span className="text-base">{item.icon}</span>
-            <span>{item.label}</span>
+            <Icon size={18} weight={activeView === key ? 'fill' : 'regular'} />
+            <span>{label}</span>
           </button>
         ))}
       </nav>
 
       {currentProject && (
-        <div className="px-5 py-3 border-t border-separator bg-surface">
-          <p className="text-xs text-text-tertiary uppercase tracking-wider">Current Project</p>
-          <p className="text-sm font-medium text-text-primary mt-1 truncate">{currentProject.name}</p>
-          <p className="text-xs text-text-secondary mt-0.5">
-            {currentProject.mc_version} · {currentProject.loader} · {mods.length} mods
+        <div className="mx-3 mb-3 p-3 bg-elevated rounded-lg border border-separator">
+          <p className="text-[10px] text-text-tertiary uppercase tracking-wider font-mono">Active</p>
+          <p className="text-[13px] font-medium text-text-primary mt-1 truncate">{currentProject.name}</p>
+          <p className="text-[11px] text-text-tertiary mt-0.5 font-mono">
+            {currentProject.mc_version} / {currentProject.loader} / {mods.length} mods
           </p>
         </div>
       )}

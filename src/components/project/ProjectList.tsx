@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Trash, ArrowRight } from '@phosphor-icons/react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUiStore } from '../../stores/uiStore';
 
@@ -20,52 +21,54 @@ export function ProjectList() {
   };
 
   if (loading && projects.length === 0) {
-    return <p className="text-text-secondary text-sm mt-4">Loading projects...</p>;
+    return <p className="text-text-tertiary text-sm mt-6">Loading...</p>;
   }
 
   if (projects.length === 0) {
     return (
-      <div className="mt-8 text-center">
-        <p className="text-text-tertiary">No projects yet</p>
-        <p className="text-text-tertiary text-sm mt-1">Create your first modpack above</p>
+      <div className="mt-10 text-center">
+        <p className="text-text-tertiary text-sm">No projects yet</p>
+        <p className="text-text-tertiary text-xs mt-1">Create your first modpack above</p>
       </div>
     );
   }
 
   return (
-    <div className="mt-6 space-y-3">
-      <h2 className="text-lg font-semibold text-text-primary font-heading">Your Projects</h2>
+    <div className="mt-6 space-y-2">
+      <h2 className="text-xs text-text-tertiary uppercase tracking-wider font-mono mb-3">Your Projects</h2>
       {projects.map((project) => (
         <div
           key={project.id}
-          className="bg-surface rounded-xl p-4 shadow-sm border border-separator/50 hover:shadow-md transition-shadow duration-150"
+          className="bg-surface rounded-lg p-4 border border-separator hover:border-accent/30 transition-all duration-150 group"
         >
-          <div className="flex items-start justify-between">
+          <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-text-primary truncate font-heading">
+              <h3 className="font-heading font-semibold text-text-primary text-sm truncate">
                 {project.name}
               </h3>
-              <p className="text-sm text-text-secondary mt-0.5">
-                {project.mc_version} · {project.loader}
+              <p className="text-[11px] font-mono text-text-tertiary mt-0.5">
+                {project.mc_version} / {project.loader}
               </p>
               {project.description && (
-                <p className="text-sm text-text-tertiary mt-1 line-clamp-2">
+                <p className="text-xs text-text-tertiary mt-1.5 line-clamp-1">
                   {project.description}
                 </p>
               )}
             </div>
-            <div className="flex gap-2 ml-3">
+            <div className="flex gap-1.5 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={() => handleOpen(project.id)}
-                className="px-3 py-1.5 text-sm font-medium bg-accent text-white rounded-lg hover:bg-accent-light transition-colors duration-150"
+                className="p-2 bg-accent/10 text-accent rounded-md hover:bg-accent/20 transition-colors"
+                title="Open"
               >
-                Open
+                <ArrowRight size={14} weight="bold" />
               </button>
               <button
                 onClick={() => deleteProject(project.id)}
-                className="px-3 py-1.5 text-sm font-medium text-danger border border-danger/30 rounded-lg hover:bg-danger/5 transition-colors duration-150"
+                className="p-2 bg-danger/10 text-danger rounded-md hover:bg-danger/20 transition-colors"
+                title="Delete"
               >
-                Delete
+                <Trash size={14} />
               </button>
             </div>
           </div>
