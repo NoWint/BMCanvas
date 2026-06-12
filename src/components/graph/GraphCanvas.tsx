@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, useReactFlow } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, useReactFlow, ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 import { ModNode } from './ModNode';
@@ -11,12 +11,12 @@ import { useGraphStore } from '../../stores/graphStore';
 import { computeLayout } from '../../engine/graphLayout';
 import { getNodeType } from '../../engine/dependencyResolver';
 import type { ModNodeData } from '../../types';
-import type { Node, Edge } from 'reactflow';
+import type { Node } from 'reactflow';
 
 const NODE_TYPES = { modNode: ModNode };
 const EDGE_TYPES = { dependency: DependencyEdge };
 
-export function GraphCanvas() {
+function GraphCanvasInner() {
   const mods = useProjectStore((s) => s.mods);
   const currentProject = useProjectStore((s) => s.currentProject);
   const setSelectedNodeId = useUiStore((s) => s.setSelectedNodeId);
@@ -94,14 +94,6 @@ export function GraphCanvas() {
     [toggleCollapse]
   );
 
-  if (!currentProject) {
-    return (
-      <div className="h-full flex items-center justify-center text-text-tertiary">
-        Select a project to view its dependency graph
-      </div>
-    );
-  }
-
   return (
     <div className="h-full w-full relative">
       <ReactFlow
@@ -122,5 +114,23 @@ export function GraphCanvas() {
         <GraphControls />
       </ReactFlow>
     </div>
+  );
+}
+
+export function GraphCanvas() {
+  const currentProject = useProjectStore((s) => s.currentProject);
+
+  if (!currentProject) {
+    return (
+      <div className="h-full flex items-center justify-center text-text-tertiary">
+        Select a project to view its dependency graph
+      </div>
+    );
+  }
+
+  return (
+    <ReactFlowProvider>
+      <GraphCanvasInner />
+    </ReactFlowProvider>
   );
 }
