@@ -188,3 +188,46 @@ pub fn get_all_dependencies(project_id: String, db: State<DbState>) -> Result<Ve
 
     Ok(deps)
 }
+
+#[tauri::command]
+pub async fn fetch_and_save_dependencies(
+    modrinth_id: String,
+    mc_version: String,
+    loader: String,
+    project_mod_id: String,
+    client: State<'_, crate::commands::search::ModrinthState>,
+    db: State<'_, DbState>,
+) -> Result<Vec<Dependency>, String> {
+    let versions = client.0.get_versions(&modrinth_id, Some(&mc_version), Some(&loader)).await?;
+
+    let version = versions.into_iter().next()
+        .ok_or_else(|| format!("No version found for {} matching MC {} and {}", modrinth_id, mc_version, loader))?;
+
+    let conn = get_conn(&db)?;
+
+    conn.execute("DELETE FROM dependencies WHERE project_mod_id = ?1", rusqlite::params![project_mod_id])
+        .map_err(|e: rusqlite::Error| e.to_string())?;
+
+    let mut result_deps = Vec::new();
+    for dep in &version.dependencies {
+        let dep_type = dep.dependency_type.clone().unwrap_or_default();
+        let slug = dep.project_id.clone().unwrap_or_default();
+        let dep_modrinth_id = dep.project_id.clone();
+
+        let id = Uuid::new_v4().to_string();
+        conn.execute(
+            "INSERT INTO dependencies (id, project_mod_id, depends_on_slug, dep_type, dep_modrinth_id) VALUES (?1, ?2, ?3, ?4, ?5)",
+            rusqlite::params![id, project_mod_id, slug, dep_type, dep_modrinth_id],
+        ).map_err(|e: rusqlite::Error| e.to_string())?;
+
+        result_deps.push(Dependency {
+            id,
+            project_mod_id: project_mod_id.clone(),
+            depends_on_slug: slug,
+            dep_type,
+            dep_modrinth_id,
+        });
+    }
+
+    Ok(result_deps)
+}

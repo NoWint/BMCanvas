@@ -40,6 +40,7 @@ pub fn run() {
             commands::mods::save_dependencies,
             commands::mods::get_dependencies,
             commands::mods::get_all_dependencies,
+            commands::mods::fetch_and_save_dependencies,
             commands::search::search_mods,
             commands::search::get_mod_details,
             commands::search::get_mod_versions,

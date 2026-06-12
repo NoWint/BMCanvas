@@ -76,7 +76,19 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     if (!project) return;
     try {
       const mod = await tauri.addModToProject(project.id, input);
-      set((state) => ({ mods: [...state.mods, mod] }));
+      if (mod.modrinth_id) {
+        try {
+          await tauri.fetchAndSaveDependencies(
+            mod.modrinth_id,
+            project.mc_version,
+            project.loader,
+            mod.id
+          );
+        } catch (e) {
+          console.warn('Failed to fetch dependencies:', e);
+        }
+      }
+      await get().loadMods();
     } catch (e) {
       set({ error: String(e) });
     }

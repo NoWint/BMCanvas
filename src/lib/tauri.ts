@@ -84,8 +84,32 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
       return Promise.resolve();
     case 'get_dependencies':
       return Promise.resolve(mockDeps.get(args.modId) || []);
-    case 'get_all_dependencies':
-      return Promise.resolve([]);
+    case 'fetch_and_save_dependencies': {
+      const modrinthId = args.modrinthId as string;
+      const projectModId = args.projectModId as string;
+      const mockDepMap: Record<string, Array<{id: string; project_mod_id: string; depends_on_slug: string; dep_type: string; dep_modrinth_id: string | null}>> = {
+        'mock-create': [
+          { id: 'dep-1', project_mod_id: projectModId, depends_on_slug: 'flywheel', dep_type: 'required', dep_modrinth_id: 'mock-flywheel' },
+          { id: 'dep-2', project_mod_id: projectModId, depends_on_slug: 'registrate', dep_type: 'required', dep_modrinth_id: 'mock-registrate' },
+        ],
+        'mock-sodium': [
+          { id: 'dep-3', project_mod_id: projectModId, depends_on_slug: 'fabric-api', dep_type: 'required', dep_modrinth_id: 'mock-fabric-api' },
+        ],
+        'mock-iris': [
+          { id: 'dep-4', project_mod_id: projectModId, depends_on_slug: 'sodium', dep_type: 'required', dep_modrinth_id: 'mock-sodium' },
+        ],
+      };
+      const deps = mockDepMap[modrinthId] || [];
+      // Store deps for get_all_dependencies
+      const allDeps = mockDeps.get(args.projectId as string) || [];
+      allDeps.push(...deps);
+      mockDeps.set(args.projectId as string, allDeps);
+      return Promise.resolve(deps);
+    }
+    case 'get_all_dependencies': {
+      const allStored = mockDeps.get(args.projectId as string) || [];
+      return Promise.resolve(allStored);
+    }
     case 'search_mods': {
       // Return mock search results
       return Promise.resolve({
@@ -201,3 +225,12 @@ export const getModDetails = (modrinthId: string): Promise<any> =>
 
 export const getModVersions = (modrinthId: string, mcVersion?: string, loader?: string): Promise<ModrinthVersion[]> =>
   callInvoke('get_mod_versions', { modrinthId, mcVersion, loader });
+
+// Fetch and save dependencies automatically
+export const fetchAndSaveDependencies = (
+  modrinthId: string,
+  mcVersion: string,
+  loader: string,
+  projectModId: string
+): Promise<Dependency[]> =>
+  callInvoke('fetch_and_save_dependencies', { modrinthId, mcVersion, loader, projectModId });
