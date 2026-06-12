@@ -22,12 +22,12 @@ export function ModNode({ data, selected }: NodeProps<ModNodeData>) {
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-sm border-l-[3px] transition-shadow duration-150
-        ${selected ? 'shadow-md ring-1 ring-[#D4A017]/30' : 'shadow-sm'}
-        ${data.hasConflict ? 'ring-2 ring-[#FF3B30]/50' : ''}`}
+      className={`bg-surface rounded-lg shadow-sm border-l-[3px] transition-shadow duration-150
+        ${selected ? 'shadow-md ring-1 ring-accent/30' : 'shadow-sm'}
+        ${data.hasConflict ? 'ring-2 ring-danger/50' : ''}`}
       style={{ borderLeftColor: borderColor }}
     >
-      <Handle type="target" position={Position.Left} className="!bg-[#AEAEB2] !w-2 !h-2" />
+      <Handle type="target" position={Position.Left} className="!bg-text-tertiary !w-2 !h-2" />
 
       <div className="px-3 py-2 min-w-[180px]">
         <div className="flex items-center gap-2">
@@ -41,11 +41,11 @@ export function ModNode({ data, selected }: NodeProps<ModNodeData>) {
               {typeLabel[0]}
             </div>
           )}
-          <span className="text-sm font-medium text-[#1C1C1E] truncate">{data.name}</span>
+          <span className="text-sm font-medium text-text-primary truncate">{data.name}</span>
         </div>
         <div className="flex items-center gap-2 mt-1">
           {data.version && (
-            <span className="text-[10px] font-mono text-[#AEAEB2]">{data.version}</span>
+            <span className="text-[10px] font-mono text-text-tertiary">{data.version}</span>
           )}
           <span
             className="text-[9px] px-1.5 py-0.5 rounded-full text-white font-medium"
@@ -54,14 +54,14 @@ export function ModNode({ data, selected }: NodeProps<ModNodeData>) {
             {typeLabel}
           </span>
           {data.collapsed && data.dependencyCount > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-[#F2F2F7] rounded text-[#8E8E93]">
+            <span className="text-[10px] px-1.5 py-0.5 bg-background rounded text-text-secondary">
               +{data.dependencyCount}
             </span>
           )}
         </div>
       </div>
 
-      <Handle type="source" position={Position.Right} className="!bg-[#AEAEB2] !w-2 !h-2" />
+      <Handle type="source" position={Position.Right} className="!bg-text-tertiary !w-2 !h-2" />
     </div>
   );
 }

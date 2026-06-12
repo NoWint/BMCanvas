@@ -26,30 +26,30 @@ export function GraphControls() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search node..."
-          className="px-3 py-1.5 bg-white rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-xs focus:outline-none focus:border-[#D4A017] transition-colors w-40"
+          className="px-3 py-1.5 bg-surface rounded-lg border border-separator text-text-primary text-xs focus:outline-none focus:border-accent transition-colors w-40"
         />
         <button
           type="submit"
-          className="px-2 py-1.5 bg-white rounded-lg border border-[#C6C6C8] text-[#8E8E93] text-xs hover:bg-[#F2F2F7] transition-colors"
+          className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
         >
           Find
         </button>
       </form>
       <button
         onClick={() => fitView({ padding: 0.2 })}
-        className="px-2 py-1.5 bg-white rounded-lg border border-[#C6C6C8] text-[#8E8E93] text-xs hover:bg-[#F2F2F7] transition-colors"
+        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
       >
         Fit
       </button>
       <button
         onClick={() => zoomIn()}
-        className="px-2 py-1.5 bg-white rounded-lg border border-[#C6C6C8] text-[#8E8E93] text-xs hover:bg-[#F2F2F7] transition-colors"
+        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
       >
         +
       </button>
       <button
         onClick={() => zoomOut()}
-        className="px-2 py-1.5 bg-white rounded-lg border border-[#C6C6C8] text-[#8E8E93] text-xs hover:bg-[#F2F2F7] transition-colors"
+        className="px-2 py-1.5 bg-surface rounded-lg border border-separator text-text-secondary text-xs hover:bg-background transition-colors"
       >
         −
       </button>

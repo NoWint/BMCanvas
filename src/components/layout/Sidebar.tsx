@@ -17,12 +17,12 @@ export function Sidebar() {
   const mods = useProjectStore((s) => s.mods);
 
   return (
-    <aside className="w-[240px] h-full bg-[#F2F2F7] flex flex-col border-r border-[#C6C6C8]">
-      <div className="px-5 py-4 border-b border-[#C6C6C8]">
-        <h1 className="text-lg font-bold text-[#1C1C1E] tracking-tight" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>
+    <aside className="w-60 h-full bg-background flex flex-col border-r border-separator">
+      <div className="px-5 py-4 border-b border-separator">
+        <h1 className="text-lg font-bold text-text-primary tracking-tight font-heading">
           ModCanvas
         </h1>
-        <p className="text-xs text-[#AEAEB2] mt-0.5">Design Modpacks Visually</p>
+        <p className="text-xs text-text-tertiary mt-0.5">Design Modpacks Visually</p>
       </div>
 
       <nav className="flex-1 py-2">
@@ -32,8 +32,8 @@ export function Sidebar() {
             onClick={() => setActiveView(item.key)}
             className={`w-full flex items-center gap-3 px-5 py-2.5 text-sm transition-colors duration-150
               ${activeView === item.key
-                ? 'bg-white text-[#D4A017] font-medium shadow-sm'
-                : 'text-[#8E8E93] hover:bg-white/60 hover:text-[#1C1C1E]'
+                ? 'bg-surface text-accent font-medium shadow-sm'
+                : 'text-text-secondary hover:bg-surface/60 hover:text-text-primary'
               }`}
           >
             <span className="text-base">{item.icon}</span>
@@ -43,10 +43,10 @@ export function Sidebar() {
       </nav>
 
       {currentProject && (
-        <div className="px-5 py-3 border-t border-[#C6C6C8] bg-white">
-          <p className="text-xs text-[#AEAEB2] uppercase tracking-wider">Current Project</p>
-          <p className="text-sm font-medium text-[#1C1C1E] mt-1 truncate">{currentProject.name}</p>
-          <p className="text-xs text-[#8E8E93] mt-0.5">
+        <div className="px-5 py-3 border-t border-separator bg-surface">
+          <p className="text-xs text-text-tertiary uppercase tracking-wider">Current Project</p>
+          <p className="text-sm font-medium text-text-primary mt-1 truncate">{currentProject.name}</p>
+          <p className="text-xs text-text-secondary mt-0.5">
             {currentProject.mc_version} · {currentProject.loader} · {mods.length} mods
           </p>
         </div>

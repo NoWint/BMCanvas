@@ -96,7 +96,7 @@ export function GraphCanvas() {
 
   if (!currentProject) {
     return (
-      <div className="h-full flex items-center justify-center text-[#AEAEB2]">
+      <div className="h-full flex items-center justify-center text-text-tertiary">
         Select a project to view its dependency graph
       </div>
     );
@@ -117,7 +117,7 @@ export function GraphCanvas() {
         minZoom={0.1}
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
-        className="bg-[#F2F2F7]"
+        className="bg-background"
       >
         <GraphControls />
       </ReactFlow>

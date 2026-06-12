@@ -42,7 +42,7 @@ export function Canvas() {
   };
 
   return (
-    <main className="flex-1 h-full bg-[#F2F2F7] overflow-auto">
+    <main className="flex-1 h-full bg-background overflow-auto">
       {renderContent()}
     </main>
   );

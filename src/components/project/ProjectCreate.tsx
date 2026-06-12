@@ -37,44 +37,44 @@ export function ProjectCreate() {
   };
 
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm border border-[#C6C6C8]/50">
+    <div className="bg-surface rounded-xl p-5 shadow-sm border border-separator/50">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between"
       >
-        <h2 className="text-lg font-semibold text-[#1C1C1E]" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>Create New Pack</h2>
-        <span className="text-[#AEAEB2] text-xl">{expanded ? '−' : '+'}</span>
+        <h2 className="text-lg font-semibold text-text-primary font-heading">Create New Pack</h2>
+        <span className="text-text-tertiary text-xl">{expanded ? '−' : '+'}</span>
       </button>
 
       {expanded && (
         <div className="mt-4 space-y-3">
           <div>
-            <label className="text-xs text-[#AEAEB2] uppercase tracking-wider">Name</label>
+            <label className="text-xs text-text-tertiary uppercase tracking-wider">Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Tech Revolution"
-              className="w-full mt-1 px-3 py-2 bg-[#F2F2F7] rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-sm focus:outline-none focus:border-[#D4A017] transition-colors"
+              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-xs text-[#AEAEB2] uppercase tracking-wider">Description</label>
+            <label className="text-xs text-text-tertiary uppercase tracking-wider">Description</label>
             <input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Technology-focused progression pack"
-              className="w-full mt-1 px-3 py-2 bg-[#F2F2F7] rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-sm focus:outline-none focus:border-[#D4A017] transition-colors"
+              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="text-xs text-[#AEAEB2] uppercase tracking-wider">Minecraft Version</label>
+              <label className="text-xs text-text-tertiary uppercase tracking-wider">Minecraft Version</label>
               <select
                 value={mcVersion}
                 onChange={(e) => setMcVersion(e.target.value)}
-                className="w-full mt-1 px-3 py-2 bg-[#F2F2F7] rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-sm focus:outline-none focus:border-[#D4A017]"
+                className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent"
               >
                 {MC_VERSIONS.map((v) => (
                   <option key={v} value={v}>{v}</option>
@@ -82,11 +82,11 @@ export function ProjectCreate() {
               </select>
             </div>
             <div className="flex-1">
-              <label className="text-xs text-[#AEAEB2] uppercase tracking-wider">Loader</label>
+              <label className="text-xs text-text-tertiary uppercase tracking-wider">Loader</label>
               <select
                 value={loader}
                 onChange={(e) => setLoader(e.target.value as Loader)}
-                className="w-full mt-1 px-3 py-2 bg-[#F2F2F7] rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-sm focus:outline-none focus:border-[#D4A017]"
+                className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent"
               >
                 {LOADERS.map((l) => (
                   <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>
@@ -96,19 +96,19 @@ export function ProjectCreate() {
           </div>
 
           <div>
-            <label className="text-xs text-[#AEAEB2] uppercase tracking-wider">Author</label>
+            <label className="text-xs text-text-tertiary uppercase tracking-wider">Author</label>
             <input
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
               placeholder="Your name"
-              className="w-full mt-1 px-3 py-2 bg-[#F2F2F7] rounded-lg border border-[#C6C6C8] text-[#1C1C1E] text-sm focus:outline-none focus:border-[#D4A017] transition-colors"
+              className="w-full mt-1 px-3 py-2 bg-background rounded-lg border border-separator text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           <button
             onClick={handleCreate}
             disabled={!name.trim()}
-            className="w-full py-2.5 bg-[#D4A017] text-white font-medium rounded-lg hover:bg-[#FFCC66] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
+            className="w-full py-2.5 bg-accent text-white font-medium rounded-lg hover:bg-accent-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
           >
             Create Pack
           </button>

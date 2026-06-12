@@ -28,14 +28,14 @@ export default function App() {
         <Canvas />
         <Inspector />
       </div>
-      <footer className="h-7 bg-white border-t border-[#C6C6C8] flex items-center px-4 text-[11px] text-[#AEAEB2] gap-4">
+      <footer className="h-7 bg-surface border-t border-separator flex items-center px-4 text-[11px] text-text-tertiary gap-4">
         {currentProject ? (
           <>
             <span>{mods.length} mods</span>
             <span>{deps.length} dependencies</span>
-            {warningCount > 0 && <span className="text-[#FF9500]">{warningCount} warnings</span>}
-            {criticalCount > 0 && <span className="text-[#FF3B30]">{criticalCount} critical</span>}
-            {diagnostics.length === 0 && <span className="text-[#34C759]">All checks passed</span>}
+            {warningCount > 0 && <span className="text-warning">{warningCount} warnings</span>}
+            {criticalCount > 0 && <span className="text-danger">{criticalCount} critical</span>}
+            {diagnostics.length === 0 && <span className="text-success">All checks passed</span>}
           </>
         ) : (
           <span>No project selected</span>

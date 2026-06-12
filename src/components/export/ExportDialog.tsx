@@ -44,19 +44,19 @@ export function ExportDialog() {
   if (!currentProject) {
     return (
       <div className="p-6">
-        <h2 className="text-xl font-semibold text-[#1C1C1E] mb-4" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>Export</h2>
-        <p className="text-[#8E8E93]">Select a project to export</p>
+        <h2 className="text-xl font-semibold text-text-primary mb-4 font-heading">Export</h2>
+        <p className="text-text-secondary">Select a project to export</p>
       </div>
     );
   }
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-xl font-semibold text-[#1C1C1E] mb-4" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>Export Pack</h2>
+      <h2 className="text-xl font-semibold text-text-primary mb-4 font-heading">Export Pack</h2>
 
-      <div className="bg-white rounded-xl p-5 shadow-sm border border-[#C6C6C8]/50">
+      <div className="bg-surface rounded-xl p-5 shadow-sm border border-separator/50">
         <div className="mb-4">
-          <p className="text-sm text-[#8E8E93]">
+          <p className="text-sm text-text-secondary">
             {currentProject.name} · {currentProject.mc_version} · {currentProject.loader} · {mods.length} mods
           </p>
         </div>
@@ -68,12 +68,12 @@ export function ExportDialog() {
               onClick={() => setSelectedFormat(fmt.key)}
               className={`w-full text-left p-3 rounded-lg border transition-colors duration-150
                 ${selectedFormat === fmt.key
-                  ? 'border-[#D4A017] bg-[#D4A017]/5'
-                  : 'border-[#C6C6C8] bg-[#F2F2F7] hover:border-[#AEAEB2]'
+                  ? 'border-accent bg-accent/5'
+                  : 'border-separator bg-background hover:border-text-tertiary'
                 }`}
             >
-              <span className="text-sm font-medium text-[#1C1C1E]">{fmt.label}</span>
-              <p className="text-xs text-[#AEAEB2] mt-0.5">{fmt.description}</p>
+              <span className="text-sm font-medium text-text-primary">{fmt.label}</span>
+              <p className="text-xs text-text-tertiary mt-0.5">{fmt.description}</p>
             </button>
           ))}
         </div>
@@ -81,22 +81,22 @@ export function ExportDialog() {
         <button
           onClick={handleExport}
           disabled={exporting || mods.length === 0}
-          className="w-full py-2.5 bg-[#D4A017] text-white font-medium rounded-lg hover:bg-[#FFCC66] disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
+          className="w-full py-2.5 bg-accent text-white font-medium rounded-lg hover:bg-accent-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-150"
         >
           {exporting ? 'Exporting...' : 'Export'}
         </button>
 
         {result && (
-          <div className="mt-3 p-3 bg-[#34C759]/10 rounded-lg">
-            <p className="text-sm text-[#34C759] font-medium">Export successful!</p>
-            <p className="text-xs text-[#8E8E93] mt-0.5">{result}</p>
+          <div className="mt-3 p-3 bg-success/10 rounded-lg">
+            <p className="text-sm text-success font-medium">Export successful!</p>
+            <p className="text-xs text-text-secondary mt-0.5">{result}</p>
           </div>
         )}
 
         {error && (
-          <div className="mt-3 p-3 bg-[#FF3B30]/10 rounded-lg">
-            <p className="text-sm text-[#FF3B30] font-medium">Export failed</p>
-            <p className="text-xs text-[#8E8E93] mt-0.5">{error}</p>
+          <div className="mt-3 p-3 bg-danger/10 rounded-lg">
+            <p className="text-sm text-danger font-medium">Export failed</p>
+            <p className="text-xs text-text-secondary mt-0.5">{error}</p>
           </div>
         )}
       </div>

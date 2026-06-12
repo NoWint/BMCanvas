@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: #F2F2F7;
+  --color-surface: #FFFFFF;
+  --color-separator: #C6C6C8;
+  --color-text-primary: #1C1C1E;
+  --color-text-secondary: #8E8E93;
+  --color-text-tertiary: #AEAEB2;
+  --color-accent: #D4A017;
+  --color-accent-light: #FFCC66;
+  --color-danger: #FF3B30;
+  --color-warning: #FF9500;
+  --color-success: #34C759;
+  --color-info: #007AFF;
+  --color-node-mod: #D4A017;
+  --color-node-library: #007AFF;
+  --color-node-api: #8B5CF6;
+  --color-node-loader: #34C759;
+
+  --font-heading: "SF Pro Display", "Inter Tight", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 * {
@@ -12,9 +35,9 @@ html, body, #root {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #1C1C1E;
-  background: #F2F2F7;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background: var(--color-background);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -27,10 +50,10 @@ html, body, #root {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C6C6C8;
+  background: var(--color-separator);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #8E8E93;
+  background: var(--color-text-secondary);
 }

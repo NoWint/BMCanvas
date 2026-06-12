@@ -13,22 +13,22 @@ export function Inspector() {
 
   if (!inspectorOpen || !selectedMod) {
     return (
-      <aside className="w-[320px] h-full bg-white border-l border-[#C6C6C8] flex items-center justify-center">
-        <p className="text-[#AEAEB2] text-sm">Select a mod to inspect</p>
+      <aside className="w-80 h-full bg-surface border-l border-separator flex items-center justify-center">
+        <p className="text-text-tertiary text-sm">Select a mod to inspect</p>
       </aside>
     );
   }
 
   return (
-    <aside className="w-[320px] h-full bg-white border-l border-[#C6C6C8] overflow-auto">
+    <aside className="w-80 h-full bg-surface border-l border-separator overflow-auto">
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-[#1C1C1E] truncate" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>
+          <h3 className="text-base font-semibold text-text-primary truncate font-heading">
             {selectedMod.name}
           </h3>
           <button
             onClick={() => setSelectedNodeId(null)}
-            className="text-[#AEAEB2] hover:text-[#1C1C1E] transition-colors"
+            className="text-text-tertiary hover:text-text-primary transition-colors"
           >
             ✕
           </button>
@@ -45,36 +45,36 @@ export function Inspector() {
         <div className="space-y-3 text-sm">
           {selectedMod.version_number && (
             <div>
-              <span className="text-[#AEAEB2]">Version</span>
-              <p className="text-[#1C1C1E] font-mono">{selectedMod.version_number}</p>
+              <span className="text-text-tertiary">Version</span>
+              <p className="text-text-primary font-mono">{selectedMod.version_number}</p>
             </div>
           )}
           {selectedMod.author && (
             <div>
-              <span className="text-[#AEAEB2]">Author</span>
-              <p className="text-[#1C1C1E]">{selectedMod.author}</p>
+              <span className="text-text-tertiary">Author</span>
+              <p className="text-text-primary">{selectedMod.author}</p>
             </div>
           )}
           {selectedMod.description && (
             <div>
-              <span className="text-[#AEAEB2]">Description</span>
-              <p className="text-[#1C1C1E]">{selectedMod.description}</p>
+              <span className="text-text-tertiary">Description</span>
+              <p className="text-text-primary">{selectedMod.description}</p>
             </div>
           )}
           {selectedMod.license && (
             <div>
-              <span className="text-[#AEAEB2]">License</span>
-              <p className="text-[#1C1C1E]">{selectedMod.license}</p>
+              <span className="text-text-tertiary">License</span>
+              <p className="text-text-primary">{selectedMod.license}</p>
             </div>
           )}
           {selectedMod.source_url && (
             <div>
-              <span className="text-[#AEAEB2]">Source</span>
+              <span className="text-text-tertiary">Source</span>
               <a
                 href={selectedMod.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#007AFF] hover:underline"
+                className="text-info hover:underline"
               >
                 {selectedMod.source_url}
               </a>
