@@ -1,62 +1,58 @@
-import { Handle, Position } from 'reactflow';
-import type { NodeProps } from 'reactflow';
-import type { ModNodeData } from '../../types';
+import { memo } from 'react';
+import { Handle, Position, type NodeProps } from 'reactflow';
+import type { ModNodeData, NodeType } from '../../types';
 
-const NODE_STYLES: Record<string, { border: string; bg: string; dot: string; label: string }> = {
-  mod: { border: '#D4A01733', bg: '#D4A01708', dot: '#D4A017', label: 'MOD' },
-  library: { border: '#3B82F633', bg: '#3B82F608', dot: '#3B82F6', label: 'LIB' },
-  api: { border: '#8B5CF633', bg: '#8B5CF608', dot: '#8B5CF6', label: 'API' },
-  loader: { border: '#22C55E33', bg: '#22C55E08', dot: '#22C55E', label: 'LOADER' },
+const NODE_COLORS: Record<NodeType, { border: string; bg: string; text: string; label: string }> = {
+  mod: { border: '#D4A017', bg: '#D4A01711', text: '#D4A017', label: 'MOD' },
+  library: { border: '#3B82F6', bg: '#3B82F611', text: '#3B82F6', label: 'LIB' },
+  api: { border: '#8B5CF6', bg: '#8B5CF611', text: '#8B5CF6', label: 'API' },
+  loader: { border: '#22C55E', bg: '#22C55E11', text: '#22C55E', label: 'LOADER' },
 };
 
-export function ModNode({ data, selected }: NodeProps<ModNodeData>) {
-  const style = NODE_STYLES[data.nodeType] || NODE_STYLES.mod;
+function ModNodeComponent({ data, selected }: NodeProps<ModNodeData>) {
+  const colors = NODE_COLORS[data.nodeType];
+  const isConflict = data.hasConflict;
 
   return (
     <div
-      className={`rounded-lg transition-all duration-150
-        ${selected ? 'ring-1 ring-accent/40' : ''}
-        ${data.hasConflict ? 'ring-1 ring-danger/60' : ''}`}
+      className={`
+        relative min-w-[200px] rounded-md border bg-[#18181B] p-2.5
+        transition-all duration-150
+        ${selected ? 'ring-2 ring-offset-1 ring-offset-[#09090B]' : ''}
+        ${isConflict ? 'animate-danger-pulse' : selected ? 'animate-pulse-glow' : ''}
+      `}
       style={{
-        background: style.bg,
-        border: `1px solid ${selected ? style.dot : style.border}`,
+        borderLeftWidth: '3px',
+        borderLeftColor: isConflict ? '#EF4444' : colors.border,
+        borderColor: isConflict ? '#EF444466' : selected ? colors.border : '#27272A',
+        boxShadow: selected ? `0 0 12px ${colors.border}33` : undefined,
       }}
     >
-      <Handle type="target" position={Position.Left} className="!w-1.5 !h-1.5 !bg-muted !border-0" />
+      <Handle type="target" position={Position.Left} className="!bg-[#52525B] !w-1.5 !h-1.5 !border-none" />
+      <Handle type="source" position={Position.Right} className="!bg-[#52525B] !w-1.5 !h-1.5 !border-none" />
 
-      <div className="px-3 py-2 min-w-[180px]">
-        <div className="flex items-center gap-2">
-          {data.iconUrl ? (
-            <img src={data.iconUrl} alt="" className="w-5 h-5 rounded flex-shrink-0" />
-          ) : (
-            <div
-              className="w-5 h-5 rounded flex-shrink-0 flex items-center justify-center text-[8px] text-bg font-bold"
-              style={{ backgroundColor: style.dot }}
-            >
-              {style.label[0]}
-            </div>
-          )}
-          <span className="text-xs font-medium text-primary truncate">{data.name}</span>
-        </div>
-        <div className="flex items-center gap-1.5 mt-1">
-          {data.version && (
-            <span className="text-[10px] font-mono text-muted">{data.version}</span>
-          )}
-          <span
-            className="text-[8px] font-mono font-bold px-1 py-px rounded text-bg"
-            style={{ backgroundColor: style.dot }}
-          >
-            {style.label}
-          </span>
-          {data.collapsed && data.dependencyCount > 0 && (
-            <span className="text-[10px] font-mono px-1 py-px bg-elevated rounded text-muted">
-              +{data.dependencyCount}
-            </span>
-          )}
-        </div>
+      <div className="flex items-center gap-1.5">
+        <span
+          className="text-[9px] font-semibold uppercase tracking-wider"
+          style={{ color: isConflict ? '#EF4444' : colors.text }}
+        >
+          {colors.label}
+        </span>
+        {data.version && (
+          <span className="ml-auto text-[8px] text-[#52525B] font-mono">{data.version}</span>
+        )}
+        {isConflict && (
+          <span className="ml-auto text-[8px] text-[#EF4444] font-semibold">⚠ CONFLICT</span>
+        )}
       </div>
 
-      <Handle type="source" position={Position.Right} className="!w-1.5 !h-1.5 !bg-muted !border-0" />
+      <div className="mt-1 text-[12px] font-medium text-[#FAFAFA] leading-tight">{data.name}</div>
+
+      <div className="mt-0.5 text-[8px] text-[#71717A]">
+        {data.dependencyCount > 0 ? `${data.dependencyCount} dependencies` : data.nodeType === 'loader' ? 'platform' : 'no dependencies'}
+      </div>
     </div>
   );
 }
+
+export const ModNode = memo(ModNodeComponent);

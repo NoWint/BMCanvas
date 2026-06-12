@@ -3,7 +3,7 @@ import ReactFlow, { useNodesState, useEdgesState, useReactFlow, ReactFlowProvide
 import 'reactflow/dist/style.css';
 
 import { ModNode } from './ModNode';
-import { DependencyEdge } from './DependencyEdge';
+import { RequiredEdgeComponent, OptionalEdgeComponent, ConflictEdgeComponent } from './DependencyEdge';
 import { GraphControls } from './GraphControls';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUiStore } from '../../stores/uiStore';
@@ -14,7 +14,7 @@ import type { ModNodeData } from '../../types';
 import type { Node } from 'reactflow';
 
 const NODE_TYPES = { modNode: ModNode };
-const EDGE_TYPES = { dependency: DependencyEdge };
+const EDGE_TYPES = { required: RequiredEdgeComponent, optional: OptionalEdgeComponent, conflict: ConflictEdgeComponent };
 
 function GraphCanvasInner() {
   const mods = useProjectStore((s) => s.mods);
