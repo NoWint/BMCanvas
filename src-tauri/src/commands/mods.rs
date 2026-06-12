@@ -1,8 +1,12 @@
 use crate::db::{get_conn, DbState};
+use crate::commands::project::Project;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use uuid::Uuid;
 use chrono::Utc;
+use std::path::Path;
+use std::fs;
+use std::io::Read;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ProjectMod {
@@ -230,4 +234,228 @@ pub async fn fetch_and_save_dependencies(
     }
 
     Ok(result_deps)
+}
+
+#[tauri::command]
+pub async fn import_modpack(
+    file_path: String,
+    db: State<'_, DbState>,
+) -> Result<Project, String> {
+    let path = Path::new(&file_path);
+    let filename = path.file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("Imported Pack")
+        .to_string();
+
+    if file_path.ends_with(".mrpack") || is_modrinth_pack(path) {
+        import_modrinth_pack(path, &filename, &db)
+    } else if is_curseforge_pack(path) {
+        import_curseforge_pack(path, &filename, &db)
+    } else if is_prism_instance(path) {
+        import_prism_instance(path, &filename, &db)
+    } else {
+        Err("Unknown modpack format".to_string())
+    }
+}
+
+fn is_modrinth_pack(path: &Path) -> bool {
+    if let Ok(file) = fs::File::open(path) {
+        if let Ok(mut archive) = zip::ZipArchive::new(file) {
+            return archive.by_name("modrinth.index.json").is_ok();
+        }
+    }
+    false
+}
+
+fn is_curseforge_pack(path: &Path) -> bool {
+    if let Ok(file) = fs::File::open(path) {
+        if let Ok(mut archive) = zip::ZipArchive::new(file) {
+            return archive.by_name("manifest.json").is_ok();
+        }
+    }
+    false
+}
+
+fn is_prism_instance(path: &Path) -> bool {
+    path.is_dir() && path.join("mmc-pack.json").exists()
+}
+
+fn import_modrinth_pack(path: &Path, filename: &str, db: &State<'_, DbState>) -> Result<Project, String> {
+    let file = fs::File::open(path).map_err(|e| e.to_string())?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
+
+    let mut index_json = String::new();
+    let mut index_file = archive.by_name("modrinth.index.json").map_err(|e| e.to_string())?;
+    index_file.read_to_string(&mut index_json).map_err(|e| e.to_string())?;
+
+    let index: serde_json::Value = serde_json::from_str(&index_json).map_err(|e| e.to_string())?;
+
+    let name = index["name"].as_str().unwrap_or(filename).to_string();
+    let deps = &index["dependencies"];
+    let mc_version = deps["minecraft"].as_str().unwrap_or("1.21.1").to_string();
+    let loader = if deps.get("neoforge").is_some() { "neoforge" }
+        else if deps.get("forge").is_some() { "forge" }
+        else if deps.get("fabric-loader").is_some() { "fabric" }
+        else if deps.get("quilt-loader").is_some() { "quilt" }
+        else { "forge" };
+
+    let conn = get_conn(db)?;
+    let id = Uuid::new_v4().to_string();
+    let now = Utc::now().timestamp_millis();
+    conn.execute(
+        "INSERT INTO projects (id, name, description, mc_version, loader, author, tags, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+        rusqlite::params![id, name, "", mc_version, loader, "", "[]", now, now],
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
+
+    if let Some(files) = index["files"].as_array() {
+        for file_entry in files {
+            let path_str = file_entry["path"].as_str().unwrap_or("");
+            if path_str.starts_with("mods/") && path_str.ends_with(".jar") {
+                let mod_name = path_str.trim_start_matches("mods/")
+                    .trim_end_matches(".jar")
+                    .to_string();
+                let mod_id = Uuid::new_v4().to_string();
+                let _ = conn.execute(
+                    "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                    rusqlite::params![mod_id, id, "", mod_name.replace('-', ""), mod_name, "", "", "", "", "", "", "", now],
+                );
+            }
+        }
+    }
+
+    Ok(Project {
+        id,
+        name,
+        description: String::new(),
+        mc_version,
+        loader: loader.to_string(),
+        author: String::new(),
+        tags: "[]".to_string(),
+        created_at: now,
+        updated_at: now,
+    })
+}
+
+fn import_curseforge_pack(path: &Path, filename: &str, db: &State<'_, DbState>) -> Result<Project, String> {
+    let file = fs::File::open(path).map_err(|e| e.to_string())?;
+    let mut archive = zip::ZipArchive::new(file).map_err(|e| e.to_string())?;
+
+    let mut manifest_json = String::new();
+    let mut manifest_file = archive.by_name("manifest.json").map_err(|e| e.to_string())?;
+    manifest_file.read_to_string(&mut manifest_json).map_err(|e| e.to_string())?;
+
+    let manifest: serde_json::Value = serde_json::from_str(&manifest_json).map_err(|e| e.to_string())?;
+
+    let name = manifest["name"].as_str().unwrap_or(filename).to_string();
+    let mc_version = manifest["minecraft"]["version"].as_str().unwrap_or("1.21.1").to_string();
+    let loaders = manifest["minecraft"]["modLoaders"].as_array();
+    let loader = loaders.and_then(|l| l.first())
+        .and_then(|l| l["id"].as_str())
+        .map(|s| {
+            if s.starts_with("neoforge") { "neoforge" }
+            else if s.starts_with("forge") { "forge" }
+            else if s.starts_with("fabric") { "fabric" }
+            else if s.starts_with("quilt") { "quilt" }
+            else { "forge" }
+        })
+        .unwrap_or("forge");
+
+    let conn = get_conn(db)?;
+    let id = Uuid::new_v4().to_string();
+    let now = Utc::now().timestamp_millis();
+    conn.execute(
+        "INSERT INTO projects (id, name, description, mc_version, loader, author, tags, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+        rusqlite::params![id, name, "", mc_version, loader, "", "[]", now, now],
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
+
+    if let Some(files) = manifest["files"].as_array() {
+        for file_entry in files {
+            let project_id = file_entry["projectID"].as_i64().unwrap_or(0);
+            let mod_id = Uuid::new_v4().to_string();
+            let _ = conn.execute(
+                "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                rusqlite::params![mod_id, id, "", format!("curseforge-{}", project_id), format!("CF Mod #{}", project_id), "", "", "", "", "", "", "", now],
+            );
+        }
+    }
+
+    Ok(Project {
+        id,
+        name,
+        description: String::new(),
+        mc_version,
+        loader: loader.to_string(),
+        author: String::new(),
+        tags: "[]".to_string(),
+        created_at: now,
+        updated_at: now,
+    })
+}
+
+fn import_prism_instance(path: &Path, filename: &str, db: &State<'_, DbState>) -> Result<Project, String> {
+    let mmc_pack = fs::read_to_string(path.join("mmc-pack.json")).map_err(|e| e.to_string())?;
+    let pack: serde_json::Value = serde_json::from_str(&mmc_pack).map_err(|e| e.to_string())?;
+
+    let components = pack["components"].as_array();
+    let mut mc_version = "1.21.1".to_string();
+    let mut loader = "forge";
+
+    if let Some(comps) = components {
+        for comp in comps {
+            let uid = comp["uid"].as_str().unwrap_or("");
+            if uid == "net.minecraft" {
+                mc_version = comp["version"].as_str().unwrap_or("1.21.1").to_string();
+            } else if uid.contains("neoforged") { loader = "neoforge"; }
+            else if uid.contains("forge") { loader = "forge"; }
+            else if uid.contains("fabric") { loader = "fabric"; }
+            else if uid.contains("quilt") { loader = "quilt"; }
+        }
+    }
+
+    let name = fs::read_to_string(path.join("instance.cfg"))
+        .ok()
+        .and_then(|cfg| {
+            cfg.lines().find(|l| l.starts_with("name=")).map(|l| l.trim_start_matches("name=").to_string())
+        })
+        .unwrap_or_else(|| filename.to_string());
+
+    let conn = get_conn(db)?;
+    let id = Uuid::new_v4().to_string();
+    let now = Utc::now().timestamp_millis();
+    conn.execute(
+        "INSERT INTO projects (id, name, description, mc_version, loader, author, tags, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
+        rusqlite::params![id, name, "", mc_version, loader, "", "[]", now, now],
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
+
+    let mods_dir = path.join(".minecraft").join("mods");
+    if mods_dir.exists() {
+        if let Ok(entries) = fs::read_dir(&mods_dir) {
+            for entry in entries.flatten() {
+                let p = entry.path();
+                if p.extension().and_then(|e| e.to_str()) == Some("jar") {
+                    let mod_name = p.file_stem()
+                        .and_then(|n| n.to_str())
+                        .unwrap_or("unknown")
+                        .to_string();
+                    let mod_id = Uuid::new_v4().to_string();
+                    let _ = conn.execute(
+                        "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
+                        rusqlite::params![mod_id, id, "", mod_name.replace('-', ""), mod_name, "", "", "", "", "", "", "", now],
+                    );
+                }
+            }
+        }
+    }
+
+    Ok(Project {
+        id,
+        name,
+        description: String::new(),
+        mc_version,
+        loader: loader.to_string(),
+        author: String::new(),
+        tags: "[]".to_string(),
+        created_at: now,
+        updated_at: now,
+    })
 }

@@ -96,4 +96,37 @@ impl ModrinthClient {
 
         resp.json::<Vec<ModrinthVersion>>().await.map_err(|e: reqwest::Error| e.to_string())
     }
+
+    pub async fn search_modpacks(
+        &self,
+        query: &str,
+        game_versions: Option<Vec<String>>,
+        limit: Option<u32>,
+        offset: Option<u32>,
+    ) -> Result<SearchResponse, String> {
+        let mut params: Vec<(&str, String)> = vec![("query", query.to_string())];
+
+        let mut facets: Vec<Vec<String>> = vec![vec!["project_type:modpack".to_string()]];
+        if let Some(versions) = game_versions {
+            let version_facets: Vec<String> = versions.iter().map(|v| format!("versions:{}", v)).collect();
+            facets.push(version_facets);
+        }
+        params.push(("facets", serde_json::to_string(&facets).unwrap_or_default()));
+
+        if let Some(limit) = limit {
+            params.push(("limit", limit.to_string()));
+        }
+        if let Some(offset) = offset {
+            params.push(("offset", offset.to_string()));
+        }
+
+        let resp = self.client
+            .get(format!("{}/search", MODRINTH_API_BASE))
+            .query(&params)
+            .send()
+            .await
+            .map_err(|e: reqwest::Error| e.to_string())?;
+
+        resp.json::<SearchResponse>().await.map_err(|e: reqwest::Error| e.to_string())
+    }
 }

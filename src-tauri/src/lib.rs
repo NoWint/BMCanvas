@@ -41,9 +41,12 @@ pub fn run() {
             commands::mods::get_dependencies,
             commands::mods::get_all_dependencies,
             commands::mods::fetch_and_save_dependencies,
+            commands::mods::import_modpack,
             commands::search::search_mods,
             commands::search::get_mod_details,
             commands::search::get_mod_versions,
+            commands::search::search_modpacks,
+            commands::search::import_modpack_from_modrinth,
             commands::export::export_pack,
         ])
         .run(tauri::generate_context!())
