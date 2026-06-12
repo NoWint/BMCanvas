@@ -5,6 +5,9 @@ import { ProjectList } from '../project/ProjectList';
 import { ProjectCreate } from '../project/ProjectCreate';
 import { SearchBar } from '../search/SearchBar';
 import { SearchResults } from '../search/SearchResults';
+import { GraphCanvas } from '../graph/GraphCanvas';
+import { DiagnosticsPanel } from '../diagnostics/DiagnosticsPanel';
+import { ExportDialog } from '../export/ExportDialog';
 
 export function Canvas() {
   const activeView = useUiStore((s) => s.activeView);
@@ -28,27 +31,11 @@ export function Canvas() {
           </div>
         );
       case 'graph':
-        return (
-          <div className="h-full flex items-center justify-center text-[#AEAEB2]">
-            {currentProject
-              ? 'Graph view — will be implemented in Slice 3'
-              : 'Select a project to view its dependency graph'}
-          </div>
-        );
+        return <GraphCanvas />;
       case 'diagnostics':
-        return (
-          <div className="p-6 max-w-3xl mx-auto">
-            <h2 className="text-xl font-semibold text-[#1C1C1E] mb-4" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>Diagnostics</h2>
-            <p className="text-[#8E8E93]">Will be implemented in Slice 4</p>
-          </div>
-        );
+        return <DiagnosticsPanel />;
       case 'export':
-        return (
-          <div className="p-6 max-w-3xl mx-auto">
-            <h2 className="text-xl font-semibold text-[#1C1C1E] mb-4" style={{ fontFamily: '"SF Pro Display", "Inter Tight", system-ui, sans-serif' }}>Export</h2>
-            <p className="text-[#8E8E93]">Will be implemented in Slice 5</p>
-          </div>
-        );
+        return <ExportDialog />;
       default:
         return null;
     }

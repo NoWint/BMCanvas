@@ -1,6 +1,7 @@
 mod commands;
 mod db;
 mod modrinth;
+mod export;
 
 use std::sync::Mutex;
 use tauri::Manager;
@@ -42,6 +43,7 @@ pub fn run() {
             commands::search::search_mods,
             commands::search::get_mod_details,
             commands::search::get_mod_versions,
+            commands::export::export_pack,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
