@@ -38,7 +38,7 @@ pub fn create_project(input: ProjectInput, db: State<DbState>) -> Result<Project
         "INSERT INTO projects (id, name, description, mc_version, loader, author, tags, created_at, updated_at)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
         rusqlite::params![id, input.name, input.description, input.mc_version, input.loader, input.author, tags_json, now, now],
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(Project {
         id,
@@ -58,9 +58,9 @@ pub fn list_projects(db: State<DbState>) -> Result<Vec<Project>, String> {
     let conn = get_conn(&db)?;
     let mut stmt = conn.prepare(
         "SELECT id, name, description, mc_version, loader, author, tags, created_at, updated_at FROM projects ORDER BY updated_at DESC"
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
-    let projects = stmt.query_map([], |row| {
+    let projects = stmt.query_map([], |row: &rusqlite::Row| {
         Ok(Project {
             id: row.get(0)?,
             name: row.get(1)?,
@@ -72,8 +72,8 @@ pub fn list_projects(db: State<DbState>) -> Result<Vec<Project>, String> {
             created_at: row.get(7)?,
             updated_at: row.get(8)?,
         })
-    }).map_err(|e| e.to_string())?
-    .collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?;
+    }).map_err(|e: rusqlite::Error| e.to_string())?
+    .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(projects)
 }
@@ -84,7 +84,7 @@ pub fn get_project(id: String, db: State<DbState>) -> Result<Project, String> {
     conn.query_row(
         "SELECT id, name, description, mc_version, loader, author, tags, created_at, updated_at FROM projects WHERE id = ?1",
         rusqlite::params![id],
-        |row| {
+        |row: &rusqlite::Row| {
             Ok(Project {
                 id: row.get(0)?,
                 name: row.get(1)?,
@@ -97,13 +97,13 @@ pub fn get_project(id: String, db: State<DbState>) -> Result<Project, String> {
                 updated_at: row.get(8)?,
             })
         },
-    ).map_err(|e| e.to_string())
+    ).map_err(|e: rusqlite::Error| e.to_string())
 }
 
 #[tauri::command]
 pub fn delete_project(id: String, db: State<DbState>) -> Result<(), String> {
     let conn = get_conn(&db)?;
     conn.execute("DELETE FROM projects WHERE id = ?1", rusqlite::params![id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
     Ok(())
 }

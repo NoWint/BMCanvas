@@ -1,8 +1,11 @@
 mod commands;
 mod db;
+mod modrinth;
 
-use db::DbState;
 use std::sync::Mutex;
+use tauri::Manager;
+use modrinth::client::ModrinthClient;
+use commands::search::ModrinthState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -22,6 +25,7 @@ pub fn run() {
                 .expect("Failed to initialize database");
 
             app.manage(Mutex::new(conn));
+            app.manage(ModrinthState(ModrinthClient::new()));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -35,6 +39,9 @@ pub fn run() {
             commands::mods::save_dependencies,
             commands::mods::get_dependencies,
             commands::mods::get_all_dependencies,
+            commands::search::search_mods,
+            commands::search::get_mod_details,
+            commands::search::get_mod_versions,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

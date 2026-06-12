@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api/core';
 import type {
   Project, ProjectInput, ProjectMod, ModInput,
   Dependency, DepInput,
+  ModrinthSearchResult, ModrinthVersion,
 } from '../types';
 
 // Project commands
@@ -36,3 +37,18 @@ export const getDependencies = (modId: string): Promise<Dependency[]> =>
 
 export const getAllDependencies = (projectId: string): Promise<Dependency[]> =>
   invoke('get_all_dependencies', { projectId });
+
+// Search commands
+interface SearchFilters {
+  loaders?: string[];
+  game_versions?: string[];
+}
+
+export const searchMods = (query: string, filters?: SearchFilters, limit?: number, offset?: number): Promise<ModrinthSearchResult> =>
+  invoke('search_mods', { query, filters, limit, offset });
+
+export const getModDetails = (modrinthId: string): Promise<any> =>
+  invoke('get_mod_details', { modrinthId });
+
+export const getModVersions = (modrinthId: string, mcVersion?: string, loader?: string): Promise<ModrinthVersion[]> =>
+  invoke('get_mod_versions', { modrinthId, mcVersion, loader });

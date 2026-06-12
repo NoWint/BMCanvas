@@ -61,10 +61,10 @@ pub fn add_mod_to_project(project_id: String, input: ModInput, db: State<DbState
         "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
         rusqlite::params![id, project_id, input.modrinth_id, input.slug, input.name, input.version_id, input.version_number, input.icon_url, input.description, input.author, input.source_url, input.license, now],
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
     conn.execute("UPDATE projects SET updated_at = ?1 WHERE id = ?2", rusqlite::params![now, project_id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(ProjectMod {
         id,
@@ -89,11 +89,11 @@ pub fn remove_mod_from_project(project_id: String, mod_id: String, db: State<DbS
     let now = Utc::now().timestamp_millis();
 
     conn.execute("DELETE FROM dependencies WHERE project_mod_id = ?1", rusqlite::params![mod_id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
     conn.execute("DELETE FROM project_mods WHERE id = ?1 AND project_id = ?2", rusqlite::params![mod_id, project_id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
     conn.execute("UPDATE projects SET updated_at = ?1 WHERE id = ?2", rusqlite::params![now, project_id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
     Ok(())
 }
 
@@ -102,9 +102,9 @@ pub fn list_project_mods(project_id: String, db: State<DbState>) -> Result<Vec<P
     let conn = get_conn(&db)?;
     let mut stmt = conn.prepare(
         "SELECT id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at FROM project_mods WHERE project_id = ?1 ORDER BY name"
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
-    let mods = stmt.query_map(rusqlite::params![project_id], |row| {
+    let mods = stmt.query_map(rusqlite::params![project_id], |row: &rusqlite::Row| {
         Ok(ProjectMod {
             id: row.get(0)?,
             project_id: row.get(1)?,
@@ -120,8 +120,8 @@ pub fn list_project_mods(project_id: String, db: State<DbState>) -> Result<Vec<P
             license: row.get(11)?,
             added_at: row.get(12)?,
         })
-    }).map_err(|e| e.to_string())?
-    .collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?;
+    }).map_err(|e: rusqlite::Error| e.to_string())?
+    .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(mods)
 }
@@ -131,14 +131,14 @@ pub fn save_dependencies(mod_id: String, deps: Vec<DepInput>, db: State<DbState>
     let conn = get_conn(&db)?;
 
     conn.execute("DELETE FROM dependencies WHERE project_mod_id = ?1", rusqlite::params![mod_id])
-        .map_err(|e| e.to_string())?;
+        .map_err(|e: rusqlite::Error| e.to_string())?;
 
     for dep in deps {
         let id = Uuid::new_v4().to_string();
         conn.execute(
             "INSERT INTO dependencies (id, project_mod_id, depends_on_slug, dep_type, dep_modrinth_id) VALUES (?1, ?2, ?3, ?4, ?5)",
             rusqlite::params![id, mod_id, dep.depends_on_slug, dep.dep_type, dep.dep_modrinth_id],
-        ).map_err(|e| e.to_string())?;
+        ).map_err(|e: rusqlite::Error| e.to_string())?;
     }
 
     Ok(())
@@ -149,9 +149,9 @@ pub fn get_dependencies(mod_id: String, db: State<DbState>) -> Result<Vec<Depend
     let conn = get_conn(&db)?;
     let mut stmt = conn.prepare(
         "SELECT id, project_mod_id, depends_on_slug, dep_type, dep_modrinth_id FROM dependencies WHERE project_mod_id = ?1"
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
-    let deps = stmt.query_map(rusqlite::params![mod_id], |row| {
+    let deps = stmt.query_map(rusqlite::params![mod_id], |row: &rusqlite::Row| {
         Ok(Dependency {
             id: row.get(0)?,
             project_mod_id: row.get(1)?,
@@ -159,8 +159,8 @@ pub fn get_dependencies(mod_id: String, db: State<DbState>) -> Result<Vec<Depend
             dep_type: row.get(3)?,
             dep_modrinth_id: row.get(4)?,
         })
-    }).map_err(|e| e.to_string())?
-    .collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?;
+    }).map_err(|e: rusqlite::Error| e.to_string())?
+    .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(deps)
 }
@@ -173,9 +173,9 @@ pub fn get_all_dependencies(project_id: String, db: State<DbState>) -> Result<Ve
          FROM dependencies d
          JOIN project_mods pm ON d.project_mod_id = pm.id
          WHERE pm.project_id = ?1"
-    ).map_err(|e| e.to_string())?;
+    ).map_err(|e: rusqlite::Error| e.to_string())?;
 
-    let deps = stmt.query_map(rusqlite::params![project_id], |row| {
+    let deps = stmt.query_map(rusqlite::params![project_id], |row: &rusqlite::Row| {
         Ok(Dependency {
             id: row.get(0)?,
             project_mod_id: row.get(1)?,
@@ -183,8 +183,8 @@ pub fn get_all_dependencies(project_id: String, db: State<DbState>) -> Result<Ve
             dep_type: row.get(3)?,
             dep_modrinth_id: row.get(4)?,
         })
-    }).map_err(|e| e.to_string())?
-    .collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())?;
+    }).map_err(|e: rusqlite::Error| e.to_string())?
+    .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;
 
     Ok(deps)
 }
