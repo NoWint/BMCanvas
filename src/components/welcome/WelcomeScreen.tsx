@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
+import * as tauri from '../../lib/tauri';
 import type { Loader } from '../../types';
 
 const MC_VERSIONS = ['1.21.1', '1.21', '1.20.4', '1.20.1', '1.19.4', '1.18.2', '1.16.5'];
@@ -36,6 +37,32 @@ export function WelcomeScreen() {
   const handleSelect = async (id: string) => {
     await selectProject(id);
     hideWelcome();
+  };
+
+  const handleImport = async () => {
+    try {
+      if ((window as any).__TAURI_INTERNALS__) {
+        const { open } = await import('@tauri-apps/plugin-dialog');
+        const selected = await open({
+          multiple: false,
+          filters: [{ name: 'Modpack', extensions: ['mrpack', 'zip'] }],
+        });
+        if (selected) {
+          const project = await tauri.importModpack(selected as string);
+          await selectProject(project.id);
+          hideWelcome();
+        }
+      } else {
+        const path = prompt('Enter modpack file path:');
+        if (path) {
+          const project = await tauri.importModpack(path);
+          await selectProject(project.id);
+          hideWelcome();
+        }
+      }
+    } catch (e) {
+      console.error('Import failed:', e);
+    }
   };
 
   return (
@@ -123,12 +150,20 @@ export function WelcomeScreen() {
             </div>
           </div>
         ) : (
-          <button
-            onClick={() => setShowCreate(true)}
-            className="w-full px-4 py-3 bg-[#111113] border border-dashed border-[#27272A] rounded-lg text-[11px] text-[#71717A] hover:text-[#D4A017] hover:border-[#D4A017] transition-colors duration-100"
-          >
-            + Create New Pack
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={() => setShowCreate(true)}
+              className="w-full px-4 py-3 bg-[#111113] border border-dashed border-[#27272A] rounded-lg text-[11px] text-[#71717A] hover:text-[#D4A017] hover:border-[#D4A017] transition-colors duration-100"
+            >
+              + Create New Pack
+            </button>
+            <button
+              onClick={handleImport}
+              className="w-full px-4 py-3 bg-[#111113] border border-dashed border-[#27272A] rounded-lg text-[11px] text-[#71717A] hover:text-[#22C55E] hover:border-[#22C55E] transition-colors duration-100"
+            >
+              📦 Import from File (.mrpack / .zip / Prism)
+            </button>
+          </div>
         )}
       </div>
     </div>

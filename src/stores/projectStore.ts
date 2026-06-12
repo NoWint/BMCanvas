@@ -75,7 +75,46 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     const project = get().currentProject;
     if (!project) return;
     try {
-      const mod = await tauri.addModToProject(project.id, input);
+      // First, try to get version info from Modrinth
+      let enrichedInput = { ...input };
+      if (input.modrinth_id) {
+        try {
+          const versions = await tauri.getModVersions(
+            input.modrinth_id,
+            project.mc_version,
+            project.loader
+          );
+          if (versions.length > 0) {
+            const version = versions[0];
+            enrichedInput = {
+              ...enrichedInput,
+              version_id: version.id,
+              version_number: version.version_number ?? null,
+              changelog: version.changelog ?? null,
+            };
+          }
+        } catch (e) {
+          console.warn('Failed to fetch version info:', e);
+        }
+
+        // Also get full project details for more info
+        try {
+          const details = await tauri.getModDetails(input.modrinth_id);
+          if (details) {
+            enrichedInput = {
+              ...enrichedInput,
+              source_url: details.source_url ?? enrichedInput.source_url,
+              license: details.license?.id ?? enrichedInput.license,
+              homepage_url: details.license?.name ?? enrichedInput.homepage_url,
+              supported_mc_versions: details.versions ?? enrichedInput.supported_mc_versions,
+            };
+          }
+        } catch (e) {
+          console.warn('Failed to fetch mod details:', e);
+        }
+      }
+
+      const mod = await tauri.addModToProject(project.id, enrichedInput);
       if (mod.modrinth_id) {
         try {
           await tauri.fetchAndSaveDependencies(

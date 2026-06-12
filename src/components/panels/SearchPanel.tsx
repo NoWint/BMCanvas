@@ -8,8 +8,9 @@ export function SearchPanel() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ModrinthSearchHit[]>([]);
   const [loading, setLoading] = useState(false);
-  const { addMod, currentProject } = useProjectStore();
-  const { closePanel } = useUIStore();
+  const [searchType, setSearchType] = useState<'mods' | 'modpacks'>('mods');
+  const { addMod, currentProject, selectProject } = useProjectStore();
+  const { closePanel, hideWelcome } = useUIStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -20,11 +21,16 @@ export function SearchPanel() {
     if (!query.trim()) return;
     setLoading(true);
     try {
-      const res = await tauri.searchMods(query, {
-        loaders: currentProject ? [currentProject.loader] : undefined,
-        game_versions: currentProject ? [currentProject.mc_version] : undefined,
-      });
-      setResults(res.hits);
+      if (searchType === 'modpacks') {
+        const res = await tauri.searchModpacks(query, currentProject ? [currentProject.mc_version] : undefined);
+        setResults(res.hits);
+      } else {
+        const res = await tauri.searchMods(query, {
+          loaders: currentProject ? [currentProject.loader] : undefined,
+          game_versions: currentProject ? [currentProject.mc_version] : undefined,
+        });
+        setResults(res.hits);
+      }
     } catch (e) {
       console.error('Search failed:', e);
     } finally {
@@ -50,6 +56,17 @@ export function SearchPanel() {
     });
   };
 
+  const handleAddModpack = async (hit: ModrinthSearchHit) => {
+    try {
+      const project = await tauri.importModpackFromModrinth(hit.project_id);
+      await selectProject(project.id);
+      hideWelcome();
+      closePanel();
+    } catch (e) {
+      console.error('Import modpack failed:', e);
+    }
+  };
+
   const formatDownloads = (n: number) => {
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
     if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
@@ -67,7 +84,7 @@ export function SearchPanel() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            placeholder="Search mods on Modrinth..."
+            placeholder={searchType === 'modpacks' ? 'Search modpacks on Modrinth...' : 'Search mods on Modrinth...'}
             className="flex-1 bg-transparent text-[13px] text-[#FAFAFA] placeholder-[#3F3F46] outline-none"
           />
           <button
@@ -78,7 +95,25 @@ export function SearchPanel() {
           </button>
           <kbd className="text-[8px] font-mono text-[#3F3F46]">⌘K</kbd>
         </div>
-        <div className="overflow-y-auto max-h-[calc(60vh-52px)]">
+        <div className="flex border-b border-[#1E1E22]">
+          <button
+            onClick={() => setSearchType('mods')}
+            className={`flex-1 py-1.5 text-[10px] font-medium transition-colors duration-100 ${
+              searchType === 'mods' ? 'text-[#D4A017] border-b-2 border-[#D4A017]' : 'text-[#52525B] hover:text-[#A1A1AA]'
+            }`}
+          >
+            Mods
+          </button>
+          <button
+            onClick={() => setSearchType('modpacks')}
+            className={`flex-1 py-1.5 text-[10px] font-medium transition-colors duration-100 ${
+              searchType === 'modpacks' ? 'text-[#D4A017] border-b-2 border-[#D4A017]' : 'text-[#52525B] hover:text-[#A1A1AA]'
+            }`}
+          >
+            Modpacks
+          </button>
+        </div>
+        <div className="overflow-y-auto max-h-[calc(60vh-88px)]">
           {loading && (
             <div className="px-4 py-8 text-center text-[#52525B] text-xs">Searching...</div>
           )}
@@ -106,7 +141,7 @@ export function SearchPanel() {
                   <span>{formatDownloads(hit.downloads)} downloads</span>
                 </div>
               </div>
-              {currentProject && (
+              {currentProject && searchType === 'mods' && (
                 <span className={`text-[8px] px-1.5 py-0.5 rounded ${
                   hit.versions.includes(currentProject.mc_version)
                     ? 'text-[#22C55E] bg-[#22C55E11]'
@@ -115,12 +150,21 @@ export function SearchPanel() {
                   {currentProject.mc_version}
                 </span>
               )}
-              <button
-                onClick={() => handleAdd(hit)}
-                className="px-2.5 py-1 bg-[#D4A017] text-[#09090B] text-[9px] font-semibold rounded hover:bg-[#FFCC66] transition-colors duration-100"
-              >
-                Add
-              </button>
+              {searchType === 'modpacks' ? (
+                <button
+                  onClick={() => handleAddModpack(hit)}
+                  className="px-2.5 py-1 bg-[#22C55E] text-[#09090B] text-[9px] font-semibold rounded hover:bg-[#4ADE80] transition-colors duration-100"
+                >
+                  Import
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleAdd(hit)}
+                  className="px-2.5 py-1 bg-[#D4A017] text-[#09090B] text-[9px] font-semibold rounded hover:bg-[#FFCC66] transition-colors duration-100"
+                >
+                  Add
+                </button>
+              )}
             </div>
           ))}
         </div>
