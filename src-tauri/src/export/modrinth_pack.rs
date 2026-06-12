@@ -1,47 +1,58 @@
 use crate::commands::mods::ProjectMod;
-use serde_json::json;
 use std::fs;
+use std::io::Write;
 use std::path::Path;
 
 pub fn export_modrinth_pack(
-    project_name: &str,
+    name: &str,
     mc_version: &str,
     loader: &str,
     mods: &[ProjectMod],
     output_path: &str,
 ) -> Result<String, String> {
-    let output_dir = Path::new(output_path);
-    let mods_dir = output_dir.join("mods");
-    fs::create_dir_all(&mods_dir).map_err(|e: std::io::Error| e.to_string())?;
+    let dir = Path::new(output_path);
+    fs::create_dir_all(dir).map_err(|e| e.to_string())?;
 
-    let files_json: Vec<serde_json::Value> = mods.iter().filter_map(|m| {
-        m.modrinth_id.as_ref().map(|_mid| {
-            json!({
-                "path": format!("mods/{}.jar", m.slug.as_deref().unwrap_or(&m.name)),
-                "hashes": {},
-                "env": { "client": "required", "server": "required" },
-                "downloads": [],
-                "fileSize": 0
-            })
-        })
-    }).collect();
+    let loader_id = match loader {
+        "forge" => "forge",
+        "neoforge" => "neoforge",
+        "fabric" => "fabric-loader",
+        "quilt" => "quilt-loader",
+        _ => loader,
+    };
 
-    let index = json!({
-        "formatVersion": 1,
-        "game": "minecraft",
-        "versionId": project_name,
-        "name": project_name,
-        "summary": "",
-        "files": files_json,
-        "dependencies": {
-            "minecraft": mc_version,
-            loader: loader
-        }
-    });
+    let mut files_json = Vec::new();
+    for m in mods {
+        let fallback_slug = m.name.to_lowercase().replace(' ', "-");
+        let slug = m.slug.as_deref().unwrap_or(&fallback_slug);
+        files_json.push(format!(
+            r#"{{"path": "mods/{}.jar","hashes":{{}},"downloads":[],"fileSize":0}}"#,
+            slug
+        ));
+    }
 
-    let index_path = output_dir.join("modrinth.index.json");
-    let index_content = serde_json::to_string_pretty(&index).map_err(|e: serde_json::Error| e.to_string())?;
-    fs::write(&index_path, index_content).map_err(|e: std::io::Error| e.to_string())?;
+    let index = format!(r#"{{
+  "formatVersion": 1,
+  "game": "minecraft",
+  "versionId": "{name}-{mc_version}",
+  "name": "{name}",
+  "files": [{files}],
+  "dependencies": {{
+    "minecraft": "{mc_version}",
+    "{loader_id}": "0"
+  }}
+}}"#,
+        name = name,
+        mc_version = mc_version,
+        loader_id = loader_id,
+        files = files_json.join(",\n    ")
+    );
 
-    Ok(output_dir.to_string_lossy().to_string())
+    let index_path = dir.join("modrinth.index.json");
+    let mut file = fs::File::create(&index_path).map_err(|e| e.to_string())?;
+    file.write_all(index.as_bytes()).map_err(|e| e.to_string())?;
+
+    fs::create_dir_all(dir.join("overrides")).map_err(|e| e.to_string())?;
+
+    Ok(index_path.to_string_lossy().to_string())
 }

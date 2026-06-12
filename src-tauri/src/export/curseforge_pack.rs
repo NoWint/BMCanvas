@@ -1,46 +1,45 @@
 use crate::commands::mods::ProjectMod;
-use serde_json::json;
 use std::fs;
+use std::io::Write;
 use std::path::Path;
 
 pub fn export_curseforge_pack(
-    project_name: &str,
+    name: &str,
     mc_version: &str,
     loader: &str,
     mods: &[ProjectMod],
     output_path: &str,
 ) -> Result<String, String> {
-    let temp_dir = Path::new(output_path).join("curseforge_temp");
-    let mods_dir = temp_dir.join("mods");
-    fs::create_dir_all(&mods_dir).map_err(|e: std::io::Error| e.to_string())?;
+    let dir = Path::new(output_path);
+    fs::create_dir_all(dir).map_err(|e| e.to_string())?;
 
-    let manifest = json!({
-        "minecraft": {
-            "version": mc_version,
-            "modLoaders": [{
-                "id": format!("{}-0", loader),
-                "primary": true
-            }]
-        },
-        "manifestType": "minecraftModpack",
-        "manifestVersion": 1,
-        "name": project_name,
-        "files": [],
-        "overrides": "overrides"
-    });
+    let mut files_json = Vec::new();
+    for _m in mods {
+        files_json.push(r#"{{"projectID": 0,"fileID": 0,"required": true}}"#.to_string());
+    }
 
-    let manifest_path = temp_dir.join("manifest.json");
-    let content = serde_json::to_string_pretty(&manifest).map_err(|e: serde_json::Error| e.to_string())?;
-    fs::write(&manifest_path, content).map_err(|e: std::io::Error| e.to_string())?;
-
-    let modlist = format!(
-        "<ul>{}</ul>",
-        mods.iter()
-            .map(|m| format!("<li>{}</li>", m.name))
-            .collect::<Vec<_>>()
-            .join("")
+    let manifest = format!(r#"{{
+  "minecraft": {{
+    "version": "{mc_version}",
+    "modLoaders": [{{"id": "{loader}", "primary": true}}]
+  }},
+  "manifestType": "minecraftModpack",
+  "manifestVersion": 1,
+  "name": "{name}",
+  "files": [{files}],
+  "overrides": "overrides"
+}}"#,
+        name = name,
+        mc_version = mc_version,
+        loader = loader,
+        files = files_json.join(",\n    ")
     );
-    fs::write(temp_dir.join("modlist.html"), modlist).map_err(|e: std::io::Error| e.to_string())?;
 
-    Ok(temp_dir.to_string_lossy().to_string())
+    let manifest_path = dir.join("manifest.json");
+    let mut file = fs::File::create(&manifest_path).map_err(|e| e.to_string())?;
+    file.write_all(manifest.as_bytes()).map_err(|e| e.to_string())?;
+
+    fs::create_dir_all(dir.join("overrides")).map_err(|e| e.to_string())?;
+
+    Ok(manifest_path.to_string_lossy().to_string())
 }
