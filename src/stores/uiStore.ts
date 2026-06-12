@@ -14,6 +14,7 @@ interface UIState {
   closeInspector: () => void;
   setSelectedNode: (nodeId: string | null) => void;
   hideWelcome: () => void;
+  showWelcome: () => void;
 }
 
 export const useUIStore = create<UIState>((set, get) => ({
@@ -32,4 +33,5 @@ export const useUIStore = create<UIState>((set, get) => ({
   closeInspector: () => set({ inspectorOpen: false, selectedNodeId: null }),
   setSelectedNode: (nodeId) => set({ selectedNodeId: nodeId }),
   hideWelcome: () => set({ welcomeVisible: false }),
+  showWelcome: () => set({ welcomeVisible: true }),
 }));

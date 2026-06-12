@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import { getNodeType } from '../../engine/dependencyResolver';
@@ -11,9 +12,22 @@ const NODE_COLORS: Record<NodeType, string> = {
 };
 
 export function ModListPanel() {
-  const { currentProject, mods, removeMod } = useProjectStore();
-  const { openInspector, setSelectedNode } = useUIStore();
-  const { togglePanel } = useUIStore();
+  const { currentProject, mods, removeMod, projects, selectProject } = useProjectStore();
+  const { openInspector, setSelectedNode, togglePanel, showWelcome } = useUIStore();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   if (!currentProject) return null;
 
@@ -27,17 +41,84 @@ export function ModListPanel() {
     await removeMod(modId);
   };
 
+  const handleSwitchProject = async (projectId: string) => {
+    setDropdownOpen(false);
+    if (projectId !== currentProject.id) {
+      await selectProject(projectId);
+    }
+  };
+
+  const handleBackToProjects = () => {
+    setDropdownOpen(false);
+    showWelcome();
+  };
+
   return (
     <div className="w-[240px] bg-[#0C0C0E] border-r border-[#1E1E22] flex flex-col shrink-0">
-      <div className="p-3 border-b border-[#1E1E22]">
-        <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1.5">Project</div>
-        <div className="bg-[#18181B] rounded-md px-2.5 py-2">
-          <div className="text-[11px] text-[#FAFAFA] font-medium">{currentProject.name}</div>
-          <div className="text-[8px] text-[#52525B] mt-0.5">
-            {currentProject.mc_version} · {currentProject.loader}
+      {/* Project switcher */}
+      <div className="p-3 border-b border-[#1E1E22] relative" ref={dropdownRef}>
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="w-full flex items-center gap-2 bg-[#18181B] rounded-md px-2.5 py-2 hover:bg-[#1E1E22] transition-colors duration-100"
+        >
+          <div className="flex-1 min-w-0 text-left">
+            <div className="text-[11px] text-[#FAFAFA] font-medium">{currentProject.name}</div>
+            <div className="text-[8px] text-[#52525B] mt-0.5">
+              {currentProject.mc_version} · {currentProject.loader}
+            </div>
           </div>
-        </div>
+          <span className={`text-[8px] text-[#52525B] transition-transform duration-100 ${dropdownOpen ? 'rotate-180' : ''}`}>
+            ▼
+          </span>
+        </button>
+
+        {/* Dropdown */}
+        {dropdownOpen && (
+          <div className="absolute left-3 right-3 top-full mt-1 bg-[#18181B] border border-[#1E1E22] rounded-md shadow-xl z-50 overflow-hidden">
+            {/* Back to all projects */}
+            <button
+              onClick={handleBackToProjects}
+              className="w-full flex items-center gap-2 px-2.5 py-2 text-[10px] text-[#D4A017] hover:bg-[#1E1E22] transition-colors duration-100 border-b border-[#1E1E22]"
+            >
+              <span>←</span>
+              <span>All Projects</span>
+            </button>
+
+            {/* Project list */}
+            <div className="max-h-[200px] overflow-y-auto">
+              {projects.map((project) => (
+                <button
+                  key={project.id}
+                  onClick={() => handleSwitchProject(project.id)}
+                  className={`w-full flex items-center gap-2 px-2.5 py-2 transition-colors duration-100 ${
+                    project.id === currentProject.id
+                      ? 'bg-[#1E1E22] text-[#D4A017]'
+                      : 'text-[#FAFAFA] hover:bg-[#1E1E22]'
+                  }`}
+                >
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="text-[10px] font-medium truncate">{project.name}</div>
+                    <div className="text-[8px] text-[#52525B]">{project.mc_version} · {project.loader}</div>
+                  </div>
+                  {project.id === currentProject.id && (
+                    <span className="text-[8px] text-[#D4A017]">●</span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* New project */}
+            <button
+              onClick={() => { setDropdownOpen(false); showWelcome(); }}
+              className="w-full flex items-center gap-2 px-2.5 py-2 text-[10px] text-[#52525B] hover:text-[#71717A] hover:bg-[#1E1E22] transition-colors duration-100 border-t border-[#1E1E22]"
+            >
+              <span className="text-[#D4A017]">+</span>
+              <span>New Project</span>
+            </button>
+          </div>
+        )}
       </div>
+
       <div className="flex-1 overflow-y-auto">
         <div className="px-3 pt-2 pb-1">
           <div className="text-[8px] text-[#52525B] uppercase tracking-wider">Mods ({mods.length})</div>
