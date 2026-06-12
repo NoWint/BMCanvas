@@ -1,15 +1,91 @@
 # ModCanvas 生产化升级 — 子项目1：核心体验升级
 
 **日期**: 2026-06-12
-**状态**: 设计中
+**状态**: 已批准
 **策略**: 渐进增强（在现有代码基础上扩展功能，不重构架构）
+
+---
+
+## 设计语言：Apple TV 风格
+
+遵循 Apple 的高级设计感，打造沉浸式深色体验。
+
+### 核心原则
+
+1. **沉浸式深色**：纯黑背景（#000000），内容浮于其上，如同 Apple TV 的影视浏览体验
+2. **毛玻璃层叠**：面板、卡片、弹窗使用 `backdrop-filter: blur(40px)` + 半透明背景，营造深度感
+3. **大字体排版**：标题 28-40px / 正文 14-16px / 辅助 12px，SF Pro 风格（使用 Inter 作为 web 替代）
+4. **流畅动画**：所有交互 300ms ease-out 过渡，卡片 hover 微缩放（1.02x），面板滑入/淡入
+5. **留白至上**：内容区域 padding 24-32px，卡片间距 16px，让视觉呼吸
+6. **焦点引导**：选中/高亮元素使用微妙的光晕效果（box-shadow with accent color），而非粗边框
+
+### 色彩系统
+
+```
+--bg-primary:       #000000     /* 纯黑背景 */
+--bg-secondary:     #1c1c1e     /* 面板背景 */
+--bg-elevated:      #2c2c2e     /* 卡片/弹窗背景 */
+--bg-glass:         rgba(30,30,30,0.7)  /* 毛玻璃背景 */
+
+--text-primary:     #f5f5f7     /* 主文字 */
+--text-secondary:   #86868b     /* 辅助文字 */
+--text-tertiary:    #48484a     /* 占位文字 */
+
+--accent:           #0a84ff     /* 主强调色（蓝） */
+--accent-green:     #30d158     /* 成功/添加 */
+--accent-orange:    #ff9f0a     /* 警告 */
+--accent-red:       #ff453a     /* 错误/删除 */
+--accent-purple:    #bf5af2     /* 特殊标签 */
+
+--border:           rgba(255,255,255,0.08)  /* 微妙边框 */
+--divider:          rgba(255,255,255,0.12)  /* 分割线 */
+```
+
+### 组件风格
+
+**卡片**：
+- 圆角 16px
+- 背景 `rgba(44,44,46,0.8)` + `backdrop-filter: blur(20px)`
+- hover：`transform: scale(1.02)` + `box-shadow: 0 8px 32px rgba(0,0,0,0.4)`
+- 过渡 300ms ease-out
+
+**面板**：
+- 圆角 12px（朝向画布的边）
+- 背景 `rgba(28,28,30,0.85)` + `backdrop-filter: blur(40px)`
+- 左侧面板 border-right: `1px solid rgba(255,255,255,0.08)`
+
+**搜索面板**：
+- 全屏浮层，背景 `rgba(0,0,0,0.85)` + `backdrop-filter: blur(60px)`
+- 搜索框 48px 高度，圆角 12px，背景 `rgba(44,44,46,0.6)`
+- 分类标签：pill 形状，选中态 `background: rgba(10,132,255,0.2)` + `border: 1px solid rgba(10,132,255,0.4)`
+
+**图节点**：
+- 圆角 12px
+- 背景 `rgba(44,44,46,0.9)` + `backdrop-filter: blur(16px)`
+- 选中：左侧色条 + 微妙光晕 `box-shadow: 0 0 20px rgba(10,132,255,0.15)`
+- hover：`transform: scale(1.02)`
+
+**按钮**：
+- 主要按钮：`background: #0a84ff` + 圆角 8px + hover 变亮
+- 次要按钮：`background: rgba(255,255,255,0.08)` + 圆角 8px
+- 危险按钮：`background: #ff453a`
+- 所有按钮 hover 有 1.02x 缩放
+
+**Toast**：
+- 圆角 12px
+- 背景 `rgba(44,44,46,0.9)` + `backdrop-filter: blur(20px)`
+- 左侧 3px 色条（绿/红/黄/蓝）
+- 入场：从右侧滑入 + 淡入
+
+**滚动条**：
+- 自定义细滚动条：6px 宽，`rgba(255,255,255,0.15)`，hover 变亮
 
 ---
 
 ## 概述
 
 将 ModCanvas 从演示版本升级为真正可用的产品。聚焦6大模块：
-1. 模组发现与浏览系统（商店式体验）
+1. 模组发现与浏览系统（Apple TV 商店式体验）
 2. 图谱交互增强（折叠/高亮/拖拽/右键菜单）
 3. 中文 i18n 国际化
 4. 错误处理（Toast + ErrorBoundary）
