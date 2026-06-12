@@ -1,46 +1,46 @@
-import { Sidebar } from './components/layout/Sidebar';
-import { Canvas } from './components/layout/Canvas';
-import { Inspector } from './components/layout/Inspector';
+import { useEffect } from 'react';
+import { ReactFlowProvider } from 'reactflow';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AppShell } from './components/layout/AppShell';
+import { WelcomeScreen } from './components/welcome/WelcomeScreen';
+import { SearchPanel } from './components/panels/SearchPanel';
+import { DiagnosticsPanel } from './components/panels/DiagnosticsPanel';
+import { ExportDialog } from './components/panels/ExportDialog';
 import { useProjectStore } from './stores/projectStore';
-import { useDiagnostics } from './hooks/useDiagnostics';
-import * as tauri from './lib/tauri';
-import { useState, useEffect } from 'react';
-import type { Dependency } from './types';
+import { useUIStore } from './stores/uiStore';
+import { useKeyboard } from './hooks/useKeyboard';
 
-export default function App() {
-  const currentProject = useProjectStore((s) => s.currentProject);
-  const mods = useProjectStore((s) => s.mods);
-  const [deps, setDeps] = useState<Dependency[]>([]);
+const queryClient = new QueryClient();
+
+function AppContent() {
+  const { currentProject, loadProjects } = useProjectStore();
+  const { welcomeVisible, activePanel, hideWelcome } = useUIStore();
+
+  useKeyboard();
 
   useEffect(() => {
-    if (!currentProject) return;
-    tauri.getAllDependencies(currentProject.id).then(setDeps).catch(console.error);
-  }, [currentProject, mods]);
+    loadProjects();
+  }, [loadProjects]);
 
-  const diagnostics = useDiagnostics(deps);
-  const warningCount = diagnostics.filter((d) => d.severity === 'warning').length;
-  const criticalCount = diagnostics.filter((d) => d.severity === 'critical').length;
+  const showWelcome = welcomeVisible && !currentProject;
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-base">
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
-        <Canvas />
-        <Inspector />
+    <ReactFlowProvider>
+      <div className="relative h-screen overflow-hidden">
+        <AppShell />
+        {activePanel === 'search' && <SearchPanel />}
+        {activePanel === 'diagnostics' && <DiagnosticsPanel />}
+        {activePanel === 'export' && <ExportDialog />}
+        {showWelcome && <WelcomeScreen />}
       </div>
-      <footer className="h-6 bg-surface border-t border-sep flex items-center px-4 text-[10px] font-mono text-muted gap-4">
-        {currentProject ? (
-          <>
-            <span>{mods.length} mods</span>
-            <span>{deps.length} deps</span>
-            {warningCount > 0 && <span className="text-warning">{warningCount} warn</span>}
-            {criticalCount > 0 && <span className="text-danger">{criticalCount} crit</span>}
-            {diagnostics.length === 0 && <span className="text-success">ok</span>}
-          </>
-        ) : (
-          <span>No project</span>
-        )}
-      </footer>
-    </div>
+    </ReactFlowProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContent />
+    </QueryClientProvider>
   );
 }
