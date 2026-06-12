@@ -36,6 +36,9 @@ export interface ProjectMod {
   author: string | null;
   source_url: string | null;
   license: string | null;
+  homepage_url: string | null;
+  supported_mc_versions: string[];
+  changelog: string | null;
   added_at: number;
 }
 
@@ -50,6 +53,9 @@ export interface ModInput {
   author: string | null;
   source_url: string | null;
   license: string | null;
+  homepage_url: string | null;
+  supported_mc_versions: string[];
+  changelog: string | null;
 }
 
 // Dependency types
@@ -125,7 +131,7 @@ export interface ModrinthFile {
 
 // Diagnostic types
 export type DiagnosticSeverity = 'info' | 'warning' | 'critical';
-export type DiagnosticType = 'version_mismatch' | 'loader_mismatch' | 'missing_dependency' | 'known_incompatibility';
+export type DiagnosticType = 'version_mismatch' | 'loader_mismatch' | 'missing_dependency' | 'known_incompatibility' | 'duplicate_functionality';
 
 export interface Diagnostic {
   id: string;
@@ -147,7 +153,7 @@ export interface ExportResult {
 }
 
 // UI types
-export type ViewType = 'projects' | 'discover' | 'graph' | 'diagnostics' | 'export';
+export type PanelType = 'search' | 'diagnostics' | 'export' | null;
 
 // Graph types
 export type NodeType = 'mod' | 'library' | 'api' | 'loader';
@@ -162,4 +168,11 @@ export interface ModNodeData {
   dependencyCount: number;
   collapsed: boolean;
   hasConflict: boolean;
+  description: string | null;
+  author: string | null;
+  license: string | null;
+  supportedMcVersions: string[];
+  homepageUrl: string | null;
+  sourceUrl: string | null;
+  changelog: string | null;
 }

@@ -1,22 +1,35 @@
 import { create } from 'zustand';
-import type { ViewType } from '../types';
+import type { PanelType } from '../types';
 
-interface UiState {
-  activeView: ViewType;
+interface UIState {
+  activePanel: PanelType;
   inspectorOpen: boolean;
   selectedNodeId: string | null;
+  welcomeVisible: boolean;
 
-  setActiveView: (view: ViewType) => void;
-  setInspectorOpen: (open: boolean) => void;
-  setSelectedNodeId: (id: string | null) => void;
+  openPanel: (panel: PanelType) => void;
+  closePanel: () => void;
+  togglePanel: (panel: PanelType) => void;
+  openInspector: (nodeId: string) => void;
+  closeInspector: () => void;
+  setSelectedNode: (nodeId: string | null) => void;
+  hideWelcome: () => void;
 }
 
-export const useUiStore = create<UiState>((set) => ({
-  activeView: 'projects',
+export const useUIStore = create<UIState>((set, get) => ({
+  activePanel: null,
   inspectorOpen: false,
   selectedNodeId: null,
+  welcomeVisible: true,
 
-  setActiveView: (view) => set({ activeView: view }),
-  setInspectorOpen: (open) => set({ inspectorOpen: open }),
-  setSelectedNodeId: (id) => set({ selectedNodeId: id, inspectorOpen: id !== null }),
+  openPanel: (panel) => set({ activePanel: panel }),
+  closePanel: () => set({ activePanel: null }),
+  togglePanel: (panel) => {
+    const current = get().activePanel;
+    set({ activePanel: current === panel ? null : panel });
+  },
+  openInspector: (nodeId) => set({ inspectorOpen: true, selectedNodeId: nodeId }),
+  closeInspector: () => set({ inspectorOpen: false, selectedNodeId: null }),
+  setSelectedNode: (nodeId) => set({ selectedNodeId: nodeId }),
+  hideWelcome: () => set({ welcomeVisible: false }),
 }));

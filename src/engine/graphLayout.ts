@@ -2,16 +2,17 @@ import dagre from 'dagre';
 import type { Node, Edge } from 'reactflow';
 import type { ModNodeData } from '../types';
 
-const NODE_WIDTH = 220;
-const NODE_HEIGHT = 80;
+const NODE_WIDTH = 200;
+const NODE_HEIGHT = 72;
 
 export function computeLayout(
   nodes: Node<ModNodeData>[],
-  edges: Edge[]
+  edges: Edge[],
+  direction: 'LR' | 'TB' = 'LR'
 ): Node<ModNodeData>[] {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir: 'LR', nodesep: 60, ranksep: 120 });
+  g.setGraph({ rankdir: direction, nodesep: 60, ranksep: 140 });
 
   for (const node of nodes) {
     g.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
