@@ -1,0 +1,70 @@
+<h2>ModCanvas 重构策略</h2>
+<p class="subtitle">5 个致命问题需要解决，三种重构深度</p>
+
+<div class="options">
+  <div class="option" data-choice="surgical" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>精准手术：修复致命问题，保留可复用代码</h3>
+      <p>保留 Rust 后端 + 类型系统 + mock 层，重写前端架构和组件。修复图谱边为空、重构为图谱中心架构、补全诊断/导出、添加 Framer Motion。</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>优势</h4><ul>
+          <li>保留已验证的 Rust 后端</li>
+          <li>保留类型系统和 mock 层</li>
+          <li>工作量最小</li>
+        </ul></div>
+        <div class="cons"><h4>风险</h4><ul>
+          <li>旧组件的隐式耦合可能拖慢重构</li>
+          <li>渐进修改容易遗漏不一致</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="frontend" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>前端重写：保留 Rust 后端，前端从零开始</h3>
+      <p>保留 Rust 后端（修复导出空壳），删除所有前端代码，按新架构从零构建。新架构：图谱中心 + 浮动面板 + 信息卡片节点 + Framer Motion 动画。</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>优势</h4><ul>
+          <li>干净架构，无遗留耦合</li>
+          <li>一次到位，不需要反复修</li>
+          <li>Rust 后端已验证可复用</li>
+        </ul></div>
+        <div class="cons"><h4>风险</h4><ul>
+          <li>前端全部重写工作量大</li>
+          <li>可能引入新的 bug</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="full" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>完全重写：前后端都从零开始</h3>
+      <p>删除所有代码，按 PRD 重新设计数据模型、API、组件。最彻底但工作量最大。</p>
+      <div class="pros-cons" style="margin-top:8px">
+        <div class="pros"><h4>优势</h4><ul>
+          <li>最干净，无任何遗留</li>
+          <li>可以重新设计数据模型</li>
+        </ul></div>
+        <div class="cons"><h4>风险</h4><ul>
+          <li>工作量最大</li>
+          <li>Rust 后端大部分可复用，重写浪费</li>
+          <li>风险最高</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;padding:12px;background:#18181B;border-radius:8px;border:1px solid #D4A01744">
+  <h3 style="font-size:13px;color:#D4A017;margin-bottom:6px">推荐：方案 2 — 前端重写</h3>
+  <p style="font-size:11px;color:#A1A1AA;line-height:1.6">
+    Rust 后端的核心逻辑（项目 CRUD、Modrinth 搜索、SQLite）已经验证可用，只需修复导出空壳。
+    前端架构问题太深（图谱不是中心、边永远为空、无动画、交互模型错误），精准手术会不断碰到旧代码的隐式耦合。
+    前端重写可以一步到位实现新架构，同时复用已验证的后端。
+  </p>
+</div>

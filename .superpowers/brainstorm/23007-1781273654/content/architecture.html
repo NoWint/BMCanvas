@@ -1,0 +1,114 @@
+<h2>ModCanvas 核心架构：图谱应该是什么地位？</h2>
+<p class="subtitle">当前实现把 Graph 降级为 5 个同级视图之一，PRD 要求 "The graph canvas is the product"</p>
+
+<div class="split">
+  <!-- Current: Tab-based -->
+  <div class="mockup">
+    <div class="mockup-header">当前实现：标签页切换</div>
+    <div class="mockup-body" style="background:#111113;padding:0;overflow:hidden">
+      <div style="display:flex;height:100%">
+        <!-- Sidebar -->
+        <div style="width:60px;background:#09090B;border-right:1px solid #27272A;padding:8px 4px;display:flex;flex-direction:column;gap:4px">
+          <div style="padding:6px 4px;border-radius:4px;background:#D4A01722;color:#D4A017;font-size:9px;text-align:center">Projects</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Discover</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Graph</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Diag</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Export</div>
+        </div>
+        <!-- Main: showing project list -->
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#52525B;font-size:13px">
+          <div style="text-align:center">
+            <div style="font-size:20px;margin-bottom:8px">📋</div>
+            <div>Project List / Search / Graph / Diag / Export</div>
+            <div style="font-size:10px;margin-top:4px;color:#3F3F46">5个视图互相替换，图谱不是中心</div>
+          </div>
+        </div>
+        <!-- Inspector -->
+        <div style="width:80px;background:#0F0F11;border-left:1px solid #27272A;display:flex;align-items:center;justify-content:center;color:#3F3F46;font-size:8px">Inspector</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proposed: Graph-centric -->
+  <div class="mockup">
+    <div class="mockup-header">方案 A：图谱始终为中心（推荐）</div>
+    <div class="mockup-body" style="background:#111113;padding:0;overflow:hidden">
+      <div style="display:flex;height:100%">
+        <!-- Sidebar -->
+        <div style="width:60px;background:#09090B;border-right:1px solid #27272A;padding:8px 4px;display:flex;flex-direction:column;gap:4px">
+          <div style="padding:6px 4px;border-radius:4px;background:#D4A01722;color:#D4A017;font-size:9px;text-align:center">Mods</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Diag</div>
+          <div style="padding:6px 4px;border-radius:4px;color:#71717A;font-size:9px;text-align:center">Export</div>
+          <div style="flex:1"></div>
+          <div style="padding:6px 4px;border-radius:4px;color:#3F3F46;font-size:9px;text-align:center">⚙️</div>
+        </div>
+        <!-- Main: ALWAYS graph, with overlay panels -->
+        <div style="flex:1;position:relative;background:#0D0D0F">
+          <!-- Graph nodes -->
+          <div style="position:absolute;top:20%;left:25%;padding:6px 12px;background:#18181B;border:1px solid #D4A01766;border-radius:6px;font-size:9px;color:#FAFAFA">Create</div>
+          <div style="position:absolute;top:45%;left:15%;padding:4px 8px;background:#18181B;border:1px solid #3B82F666;border-radius:6px;font-size:8px;color:#A1A1AA">Flywheel</div>
+          <div style="position:absolute;top:45%;left:45%;padding:4px 8px;background:#18181B;border:1px solid #8B5CF666;border-radius:6px;font-size:8px;color:#A1A1AA">Registrate</div>
+          <div style="position:absolute;top:70%;left:30%;padding:4px 8px;background:#18181B;border:1px solid #22C55E66;border-radius:6px;font-size:8px;color:#A1A1AA">Forge</div>
+          <!-- Edges (simplified) -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+            <line x1="35%" y1="28%" x2="22%" y2="48%" stroke="#52525B" stroke-width="1"/>
+            <line x1="35%" y1="28%" x2="52%" y2="48%" stroke="#52525B" stroke-width="1"/>
+            <line x1="35%" y1="28%" x2="37%" y2="72%" stroke="#22C55E44" stroke-width="1" stroke-dasharray="4"/>
+          </svg>
+          <!-- Floating search panel -->
+          <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:55%;background:#18181Bee;border:1px solid #27272A;border-radius:8px;padding:8px;backdrop-filter:blur(8px)">
+            <div style="display:flex;gap:6px;align-items:center">
+              <div style="flex:1;background:#09090B;border-radius:4px;padding:4px 8px;font-size:9px;color:#71717A">🔍 Search mods on Modrinth...</div>
+              <div style="background:#D4A017;color:#09090B;padding:3px 8px;border-radius:4px;font-size:8px;font-weight:600">Search</div>
+            </div>
+          </div>
+          <!-- Floating diagnostics badge -->
+          <div style="position:absolute;bottom:8px;right:8px;background:#18181Bee;border:1px solid #EF444444;border-radius:6px;padding:4px 8px;font-size:8px;color:#EF4444;backdrop-filter:blur(8px)">⚠ 2 Critical</div>
+        </div>
+        <!-- Inspector -->
+        <div style="width:80px;background:#0F0F11;border-left:1px solid #27272A;display:flex;align-items:center;justify-content:center;color:#3F3F46;font-size:8px">Inspector</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:24px">
+  <h3>关键区别</h3>
+  <div class="pros-cons">
+    <div class="pros">
+      <h4>方案 A：图谱为中心</h4>
+      <ul>
+        <li>图谱始终可见，符合 "The graph canvas is the product"</li>
+        <li>搜索/诊断/导出以浮动面板叠加，不离开图谱上下文</li>
+        <li>类似 Figma：画布始终在，面板可开关</li>
+        <li>添加 Mod 后立即看到图谱变化</li>
+      </ul>
+    </div>
+    <div class="cons">
+      <h4>当前实现：标签页</h4>
+      <ul>
+        <li>切换视图丢失图谱上下文</li>
+        <li>添加 Mod 后需手动切到 Graph 才能看到</li>
+        <li>更像传统 Dashboard，不像专业 IDE</li>
+        <li>违反 PRD 核心原则</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>图谱始终为中心（推荐）</h3>
+      <p>Graph 永远占据主画布，搜索/诊断/导出以浮动面板叠加。类似 Figma 的交互模式。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>混合模式</h3>
+      <p>Graph 是默认视图，但搜索/导出等可以全屏展开（类似 Xcode 的 tab 切换，但 Graph 是默认 tab）。</p>
+    </div>
+  </div>
+</div>

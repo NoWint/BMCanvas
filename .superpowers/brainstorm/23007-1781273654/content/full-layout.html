@@ -1,0 +1,227 @@
+<h2>ModCanvas 新架构：全局布局</h2>
+<p class="subtitle">图谱始终为中心，所有功能以浮动面板叠加</p>
+
+<div class="mockup">
+  <div class="mockup-header">主工作区（有项目时）</div>
+  <div class="mockup-body" style="background:#09090B;padding:0;overflow:hidden;height:420px">
+    <div style="display:flex;height:100%">
+      <!-- Sidebar: Mod List -->
+      <div style="width:120px;background:#0C0C0E;border-right:1px solid #1E1E22;padding:8px;display:flex;flex-direction:column">
+        <div style="font-size:8px;color:#52525B;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding:0 4px">Project</div>
+        <div style="background:#18181B;border-radius:4px;padding:4px 6px;margin-bottom:8px">
+          <div style="font-size:8px;color:#FAFAFA;font-weight:500">Tech Revolution</div>
+          <div style="font-size:7px;color:#52525B">1.21.1 · NeoForge</div>
+        </div>
+        <div style="font-size:8px;color:#52525B;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;padding:0 4px">Mods (5)</div>
+        <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px">
+          <div style="padding:3px 6px;border-radius:3px;background:#D4A01711;border-left:2px solid #D4A017;font-size:7px;color:#FAFAFA">Create</div>
+          <div style="padding:3px 6px;border-radius:3px;border-left:2px solid #3B82F6;font-size:7px;color:#A1A1AA">Flywheel</div>
+          <div style="padding:3px 6px;border-radius:3px;border-left:2px solid #8B5CF6;font-size:7px;color:#A1A1AA">Registrate</div>
+          <div style="padding:3px 6px;border-radius:3px;border-left:2px solid #D4A017;font-size:7px;color:#A1A1AA">Sodium</div>
+          <div style="padding:3px 6px;border-radius:3px;border-left:2px solid #22C55E;font-size:7px;color:#A1A1AA">Forge</div>
+        </div>
+        <div style="margin-top:6px;padding:4px;background:#18181B;border-radius:4px;display:flex;align-items:center;gap:4px;cursor:pointer">
+          <div style="font-size:9px;color:#D4A017">+</div>
+          <div style="font-size:7px;color:#71717A">Add Mod</div>
+        </div>
+      </div>
+
+      <!-- Main: Graph Canvas (ALWAYS visible) -->
+      <div style="flex:1;position:relative;background:#0D0D0F">
+        <!-- Graph nodes -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+          <!-- Edges -->
+          <line x1="38%" y1="30%" x2="25%" y2="52%" stroke="#71717A" stroke-width="1.5"/>
+          <line x1="38%" y1="30%" x2="55%" y2="52%" stroke="#71717A" stroke-width="1.5"/>
+          <line x1="38%" y1="30%" x2="38%" y2="75%" stroke="#52525B" stroke-width="1" stroke-dasharray="4"/>
+          <line x1="60%" y1="30%" x2="55%" y2="52%" stroke="#71717A" stroke-width="1.5"/>
+          <line x1="60%" y1="30%" x2="38%" y2="75%" stroke="#71717A" stroke-width="1.5"/>
+        </svg>
+        <!-- Create node (selected) -->
+        <div style="position:absolute;top:22%;left:32%;padding:8px 12px;background:#18181B;border:1px solid #27272A;border-left:3px solid #D4A017;border-radius:6px;box-shadow:0 0 0 1px #D4A01766">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;color:#D4A017;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">MOD</span>
+            <span style="font-size:7px;color:#52525B;margin-left:auto">v0.5.1</span>
+          </div>
+          <div style="font-size:10px;color:#FAFAFA;font-weight:500;margin-top:2px">Create</div>
+          <div style="font-size:7px;color:#71717A;margin-top:1px">3 dependencies</div>
+        </div>
+        <!-- Sodium node -->
+        <div style="position:absolute;top:22%;left:54%;padding:8px 12px;background:#18181B;border:1px solid #27272A;border-left:3px solid #D4A017;border-radius:6px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;color:#D4A017;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">MOD</span>
+            <span style="font-size:7px;color:#52525B;margin-left:auto">v0.6.0</span>
+          </div>
+          <div style="font-size:10px;color:#FAFAFA;font-weight:500;margin-top:2px">Sodium</div>
+          <div style="font-size:7px;color:#71717A;margin-top:1px">2 dependencies</div>
+        </div>
+        <!-- Flywheel node -->
+        <div style="position:absolute;top:48%;left:20%;padding:8px 12px;background:#18181B;border:1px solid #27272A;border-left:3px solid #3B82F6;border-radius:6px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;color:#3B82F6;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">LIB</span>
+            <span style="font-size:7px;color:#52525B;margin-left:auto">v1.0.0</span>
+          </div>
+          <div style="font-size:10px;color:#FAFAFA;font-weight:500;margin-top:2px">Flywheel</div>
+          <div style="font-size:7px;color:#71717A;margin-top:1px">0 dependencies</div>
+        </div>
+        <!-- Registrate node -->
+        <div style="position:absolute;top:48%;left:50%;padding:8px 12px;background:#18181B;border:1px solid #27272A;border-left:3px solid #8B5CF6;border-radius:6px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;color:#8B5CF6;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">API</span>
+            <span style="font-size:7px;color:#52525B;margin-left:auto">v1.3.0</span>
+          </div>
+          <div style="font-size:10px;color:#FAFAFA;font-weight:500;margin-top:2px">Registrate</div>
+          <div style="font-size:7px;color:#71717A;margin-top:1px">0 dependencies</div>
+        </div>
+        <!-- Forge node -->
+        <div style="position:absolute;top:72%;left:33%;padding:8px 12px;background:#18181B;border:1px solid #27272A;border-left:3px solid #22C55E;border-radius:6px">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:8px;color:#22C55E;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">LOADER</span>
+            <span style="font-size:7px;color:#52525B;margin-left:auto">v52.0</span>
+          </div>
+          <div style="font-size:10px;color:#FAFAFA;font-weight:500;margin-top:2px">NeoForge</div>
+          <div style="font-size:7px;color:#71717A;margin-top:1px">platform</div>
+        </div>
+
+        <!-- Floating search bar (top center) -->
+        <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:50%;background:#18181Bee;border:1px solid #27272A;border-radius:8px;padding:6px 10px;backdrop-filter:blur(8px);display:flex;align-items:center;gap:6px">
+          <span style="color:#52525B;font-size:9px">⌘K</span>
+          <span style="color:#3F3F46;font-size:9px;flex:1">Search mods or nodes...</span>
+        </div>
+
+        <!-- Graph controls (bottom right) -->
+        <div style="position:absolute;bottom:8px;right:8px;display:flex;gap:4px">
+          <div style="background:#18181Bcc;border:1px solid #27272A;border-radius:4px;padding:3px 6px;font-size:8px;color:#71717A;backdrop-filter:blur(4px)">⊞</div>
+          <div style="background:#18181Bcc;border:1px solid #27272A;border-radius:4px;padding:3px 6px;font-size:8px;color:#71717A;backdrop-filter:blur(4px)">⤢</div>
+          <div style="background:#18181Bcc;border:1px solid #27272A;border-radius:4px;padding:3px 6px;font-size:8px;color:#71717A;backdrop-filter:blur(4px)">⊞+</div>
+        </div>
+
+        <!-- Diagnostics badge (bottom left) -->
+        <div style="position:absolute;bottom:8px;left:8px;background:#18181Bcc;border:1px solid #EF444433;border-radius:6px;padding:4px 8px;font-size:8px;color:#EF4444;backdrop-filter:blur(4px);display:flex;align-items:center;gap:4px">
+          <span>⚠</span><span>2 Critical</span><span style="color:#F59E0B;margin-left:4px">1 Warning</span>
+        </div>
+      </div>
+
+      <!-- Inspector Panel (right, conditional) -->
+      <div style="width:100px;background:#0C0C0E;border-left:1px solid #1E1E22;padding:8px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:between;margin-bottom:8px">
+          <span style="font-size:8px;color:#52525B;text-transform:uppercase;letter-spacing:1px">Inspector</span>
+          <span style="font-size:8px;color:#3F3F46;margin-left:auto">✕</span>
+        </div>
+        <div style="border-left:2px solid #D4A017;padding-left:6px;margin-bottom:6px">
+          <div style="font-size:9px;color:#FAFAFA;font-weight:500">Create</div>
+          <div style="font-size:7px;color:#D4A017">MOD · v0.5.1</div>
+        </div>
+        <div style="font-size:7px;color:#52525B;margin-bottom:2px">Description</div>
+        <div style="font-size:7px;color:#A1A1AA;margin-bottom:6px;line-height:1.4">Technology and automation mod for Minecraft</div>
+        <div style="font-size:7px;color:#52525B;margin-bottom:2px">Author</div>
+        <div style="font-size:7px;color:#A1A1AA;margin-bottom:6px">simibubi</div>
+        <div style="font-size:7px;color:#52525B;margin-bottom:2px">Dependencies</div>
+        <div style="display:flex;flex-direction:column;gap:1px;margin-bottom:6px">
+          <div style="font-size:7px;color:#3B82F6">→ Flywheel</div>
+          <div style="font-size:7px;color:#8B5CF6">→ Registrate</div>
+          <div style="font-size:7px;color:#22C55E">→ NeoForge</div>
+        </div>
+        <div style="font-size:7px;color:#52525B;margin-bottom:2px">MC Versions</div>
+        <div style="font-size:7px;color:#A1A1AA;margin-bottom:6px">1.20.1, 1.21.1</div>
+        <div style="font-size:7px;color:#52525B;margin-bottom:2px">License</div>
+        <div style="font-size:7px;color:#A1A1AA">MIT</div>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div style="height:18px;background:#09090B;border-top:1px solid #1E1E22;display:flex;align-items:center;padding:0 8px;gap:12px;font-size:7px;color:#52525B;font-family:monospace">
+      <span style="color:#D4A017">●</span>
+      <span>Tech Revolution</span>
+      <span>1.21.1</span>
+      <span>NeoForge</span>
+      <span style="margin-left:auto">5 mods</span>
+      <span>8 deps</span>
+      <span style="color:#EF4444">2 crit</span>
+      <span style="color:#F59E0B">1 warn</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px">
+  <h3>浮动面板交互</h3>
+  <p class="subtitle">搜索、诊断、导出都以浮动面板叠加在图谱上方</p>
+</div>
+
+<div class="split">
+  <!-- Search overlay -->
+  <div class="mockup">
+    <div class="mockup-header">⌘K → 搜索面板</div>
+    <div class="mockup-body" style="background:#0D0D0F;padding:0;overflow:hidden;height:200px;position:relative">
+      <!-- Dimmed graph background -->
+      <div style="position:absolute;inset:0;opacity:0.3">
+        <div style="position:absolute;top:30%;left:35%;padding:4px 8px;background:#18181B;border-left:2px solid #D4A017;border-radius:3px;font-size:7px;color:#52525B">Create</div>
+        <div style="position:absolute;top:55%;left:25%;padding:4px 8px;background:#18181B;border-left:2px solid #3B82F6;border-radius:3px;font-size:7px;color:#3F3F46">Flywheel</div>
+      </div>
+      <!-- Search panel overlay -->
+      <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:65%;background:#18181B;border:1px solid #27272A;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.5);overflow:hidden">
+        <div style="padding:8px 12px;border-bottom:1px solid #1E1E22;display:flex;align-items:center;gap:8px">
+          <span style="color:#D4A017;font-size:10px">🔍</span>
+          <span style="color:#FAFAFA;font-size:10px;flex:1">mekanism</span>
+          <span style="color:#3F3F46;font-size:8px">⌘K to close</span>
+        </div>
+        <div style="padding:4px 0">
+          <div style="padding:6px 12px;display:flex;align-items:center;gap:8px;background:#D4A01711;cursor:pointer">
+            <div style="width:20px;height:20px;border-radius:4px;background:#27272A;display:flex;align-items:center;justify-content:center;font-size:8px;color:#D4A017">M</div>
+            <div style="flex:1">
+              <div style="font-size:9px;color:#FAFAFA">Mekanism</div>
+              <div style="font-size:7px;color:#71717A">Industrial tech mod · 25M downloads</div>
+            </div>
+            <div style="font-size:7px;color:#22C55E">1.21.1 ✓</div>
+            <div style="background:#D4A017;color:#09090B;padding:2px 6px;border-radius:3px;font-size:7px;font-weight:600">Add</div>
+          </div>
+          <div style="padding:6px 12px;display:flex;align-items:center;gap:8px">
+            <div style="width:20px;height:20px;border-radius:4px;background:#27272A;display:flex;align-items:center;justify-content:center;font-size:8px;color:#A1A1AA">M</div>
+            <div style="flex:1">
+              <div style="font-size:9px;color:#FAFAFA">Mekanism Generators</div>
+              <div style="font-size:7px;color:#71717A">Energy generation add-on · 12M downloads</div>
+            </div>
+            <div style="font-size:7px;color:#22C55E">1.21.1 ✓</div>
+            <div style="background:#27272A;color:#A1A1AA;padding:2px 6px;border-radius:3px;font-size:7px">Add</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnostics overlay -->
+  <div class="mockup">
+    <div class="mockup-header">⌘D → 诊断面板</div>
+    <div class="mockup-body" style="background:#0D0D0F;padding:0;overflow:hidden;height:200px;position:relative">
+      <!-- Dimmed graph -->
+      <div style="position:absolute;inset:0;opacity:0.3">
+        <div style="position:absolute;top:30%;left:35%;padding:4px 8px;background:#18181B;border-left:2px solid #EF4444;border-radius:3px;font-size:7px;color:#3F3F46;box-shadow:0 0 8px #EF444422">Optifine</div>
+      </div>
+      <!-- Diagnostics panel -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#111113;border-top:1px solid #27272A;max-height:60%;overflow-y:auto">
+        <div style="padding:6px 12px;border-bottom:1px solid #1E1E22;display:flex;align-items:center;justify-content:between">
+          <span style="font-size:9px;color:#FAFAFA;font-weight:500">Diagnostics</span>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <span style="font-size:7px;color:#EF4444;background:#EF444411;padding:1px 4px;border-radius:2px">2 Critical</span>
+            <span style="font-size:7px;color:#F59E0B;background:#F59E0B11;padding:1px 4px;border-radius:2px">1 Warning</span>
+          </div>
+        </div>
+        <div style="padding:6px 12px;border-left:3px solid #EF4444;background:#EF444408;display:flex;align-items:center;gap:6px">
+          <span style="font-size:8px;color:#EF4444;font-weight:600">CRITICAL</span>
+          <span style="font-size:8px;color:#FAFAFA">Optifine ↔ Sodium</span>
+          <span style="font-size:7px;color:#71717A;margin-left:auto">Rendering pipeline conflict</span>
+        </div>
+        <div style="padding:6px 12px;border-left:3px solid #EF4444;background:#EF444408;display:flex;align-items:center;gap:6px">
+          <span style="font-size:8px;color:#EF4444;font-weight:600">CRITICAL</span>
+          <span style="font-size:8px;color:#FAFAFA">Missing: Cloth Config</span>
+          <span style="font-size:7px;color:#71717A;margin-left:auto">Required by Mod Menu</span>
+        </div>
+        <div style="padding:6px 12px;border-left:3px solid #F59E0B;background:#F59E0B08;display:flex;align-items:center;gap:6px">
+          <span style="font-size:8px;color:#F59E0B;font-weight:600">WARNING</span>
+          <span style="font-size:8px;color:#FAFAFA">Version mismatch</span>
+          <span style="font-size:7px;color:#71717A;margin-left:auto">Create needs 1.20.1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
