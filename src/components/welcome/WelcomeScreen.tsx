@@ -15,6 +15,7 @@ export function WelcomeScreen() {
   const [mcVersion, setMcVersion] = useState('1.21.1');
   const [loader, setLoader] = useState<Loader>('neoforge');
   const [description, setDescription] = useState('');
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     loadProjects();
@@ -41,6 +42,7 @@ export function WelcomeScreen() {
 
   const handleImport = async () => {
     try {
+      setImporting(true);
       if ((window as any).__TAURI_INTERNALS__) {
         const { open } = await import('@tauri-apps/plugin-dialog');
         const selected = await open({
@@ -49,6 +51,7 @@ export function WelcomeScreen() {
         });
         if (selected) {
           const project = await tauri.importModpack(selected as string);
+          await loadProjects();
           await selectProject(project.id);
           hideWelcome();
         }
@@ -56,12 +59,16 @@ export function WelcomeScreen() {
         const path = prompt('Enter modpack file path:');
         if (path) {
           const project = await tauri.importModpack(path);
+          await loadProjects();
           await selectProject(project.id);
           hideWelcome();
         }
       }
     } catch (e) {
       console.error('Import failed:', e);
+      alert(`Import failed: ${e}`);
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -159,9 +166,10 @@ export function WelcomeScreen() {
             </button>
             <button
               onClick={handleImport}
-              className="w-full px-4 py-3 bg-[#111113] border border-dashed border-[#27272A] rounded-lg text-[11px] text-[#71717A] hover:text-[#22C55E] hover:border-[#22C55E] transition-colors duration-100"
+              disabled={importing}
+              className="w-full px-4 py-3 bg-[#111113] border border-dashed border-[#27272A] rounded-lg text-[11px] text-[#71717A] hover:text-[#22C55E] hover:border-[#22C55E] transition-colors duration-100 disabled:opacity-50"
             >
-              📦 Import from File (.mrpack / .zip / Prism)
+              {importing ? 'Importing...' : '📦 Import from File (.mrpack / .zip / Prism)'}
             </button>
           </div>
         )}

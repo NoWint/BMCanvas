@@ -46,6 +46,7 @@ pub fn run() {
             commands::search::get_mod_details,
             commands::search::get_mod_versions,
             commands::search::search_modpacks,
+            commands::search::get_modpack_contents,
             commands::search::import_modpack_from_modrinth,
             commands::export::export_pack,
         ])

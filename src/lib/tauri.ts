@@ -316,8 +316,25 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
       mockMods.set(id, [
         { id: `mod-${mockIdCounter++}`, project_id: id, modrinth_id: 'mock-sodium', slug: 'sodium', name: 'Sodium', version_number: '0.6.0', icon_url: null, description: 'Modern rendering engine', author: 'jellysquid3', source_url: 'https://github.com/CaffeineMC/sodium', license: 'lgpl-3' },
         { id: `mod-${mockIdCounter++}`, project_id: id, modrinth_id: 'mock-iris', slug: 'iris', name: 'Iris Shaders', version_number: '1.8.0', icon_url: null, description: 'Shader loader', author: 'coderbot', source_url: null, license: null },
+        { id: `mod-${mockIdCounter++}`, project_id: id, modrinth_id: 'mock-fabric-api', slug: 'fabric-api', name: 'Fabric API', version_number: '0.92.0', icon_url: null, description: 'Fabric mod loader API', author: 'modmuss50', source_url: 'https://github.com/FabricMC/fabric', license: 'apache-2.0' },
       ]);
       return Promise.resolve(project);
+    }
+    case 'get_modpack_contents': {
+      return Promise.resolve({
+        name: 'Fabulously Optimized',
+        description: 'A performance-focused modpack with OptiFine parity.',
+        mc_version: '1.21.1',
+        loader: 'fabric',
+        icon_url: null,
+        downloads: 5000000,
+        mods: [
+          { project_id: 'mock-sodium', name: 'Sodium', slug: 'sodium', icon_url: null, description: 'Modern rendering engine for Minecraft', dep_type: 'required' },
+          { project_id: 'mock-iris', name: 'Iris Shaders', slug: 'iris', icon_url: null, description: 'Shader loader for Sodium', dep_type: 'required' },
+          { project_id: 'mock-fabric-api', name: 'Fabric API', slug: 'fabric-api', icon_url: null, description: 'Fabric mod loader API', dep_type: 'required' },
+          { project_id: 'mock-lithium', name: 'Lithium', slug: 'lithium', icon_url: null, description: 'General-purpose optimization mod', dep_type: 'optional' },
+        ],
+      });
     }
     case 'export_pack':
       return Promise.resolve('Mock export completed');
@@ -338,6 +355,7 @@ import type {
   Project, ProjectInput, ProjectMod, ModInput,
   Dependency, DepInput,
   ModrinthSearchResult, ModrinthVersion,
+  ModpackContent,
 } from '../types';
 
 // Project commands
@@ -408,3 +426,7 @@ export const searchModpacks = (query: string, gameVersions?: string[], limit?: n
 // Import modpack from Modrinth
 export const importModpackFromModrinth = (modrinthId: string): Promise<Project> =>
   callInvoke('import_modpack_from_modrinth', { modrinthId });
+
+// Preview modpack contents from Modrinth
+export const getModpackContents = (modrinthId: string): Promise<ModpackContent> =>
+  callInvoke('get_modpack_contents', { modrinthId });

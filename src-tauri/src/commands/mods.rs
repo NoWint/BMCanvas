@@ -314,10 +314,35 @@ fn import_modrinth_pack(path: &Path, filename: &str, db: &State<'_, DbState>) ->
                 let mod_name = path_str.trim_start_matches("mods/")
                     .trim_end_matches(".jar")
                     .to_string();
+
+                // Try to extract modrinth_id from download URL
+                // Format: https://cdn.modrinth.com/data/{project_id}/versions/...
+                let mut modrinth_id = String::new();
+                if let Some(downloads) = file_entry["downloads"].as_array() {
+                    if let Some(url) = downloads.first().and_then(|u| u.as_str()) {
+                        if url.starts_with("https://cdn.modrinth.com/data/") {
+                            let parts: Vec<&str> = url.split('/').collect();
+                            // /data/{project_id}/versions/...
+                            if let Some(data_idx) = parts.iter().position(|p| *p == "data") {
+                                if data_idx + 1 < parts.len() {
+                                    modrinth_id = parts[data_idx + 1].to_string();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Use modrinth_id as slug if available, otherwise derive from filename
+                let slug = if modrinth_id.is_empty() {
+                    mod_name.replace('-', "")
+                } else {
+                    modrinth_id.clone()
+                };
+
                 let mod_id = Uuid::new_v4().to_string();
                 let _ = conn.execute(
                     "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-                    rusqlite::params![mod_id, id, "", mod_name.replace('-', ""), mod_name, "", "", "", "", "", "", "", now],
+                    rusqlite::params![mod_id, id, if modrinth_id.is_empty() { "" } else { &modrinth_id }, slug, mod_name, "", "", "", "", "", "", "", now],
                 );
             }
         }

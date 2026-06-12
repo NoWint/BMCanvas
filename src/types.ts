@@ -101,6 +101,26 @@ export interface ModrinthSearchHit {
   loaders: string[];
 }
 
+// Modpack content preview types
+export interface ModpackMod {
+  project_id: string;
+  name: string;
+  slug: string | null;
+  icon_url: string | null;
+  description: string | null;
+  dep_type: string;
+}
+
+export interface ModpackContent {
+  name: string;
+  description: string | null;
+  mc_version: string;
+  loader: string;
+  icon_url: string | null;
+  downloads: number;
+  mods: ModpackMod[];
+}
+
 export interface ModrinthVersion {
   id: string;
   project_id: string;
