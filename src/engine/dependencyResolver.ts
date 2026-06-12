@@ -1,4 +1,4 @@
-import type { ProjectMod, Dependency, DepType } from '../types';
+import type { ProjectMod, Dependency, DepType, NodeType } from '../types';
 
 export interface ResolvedDependency {
   fromModId: string;
@@ -39,18 +39,23 @@ export function resolveDependencies(
   });
 }
 
-export function getNodeType(mod: ProjectMod): 'mod' | 'library' | 'api' | 'loader' {
+export function getNodeType(mod: ProjectMod): NodeType {
   const slug = (mod.slug ?? '').toLowerCase();
   const name = mod.name.toLowerCase();
 
-  if (slug.includes('forge') || slug.includes('fabric') || slug.includes('quilt') || slug.includes('neoforge')) {
-    return 'loader';
+  if (slug.includes('forge') || slug.includes('neoforge') || slug.includes('fabric') || slug.includes('quilt')) {
+    if (slug === 'forge' || slug === 'neoforge' || slug === 'fabric-api' || slug === 'quilt-loader' || slug.includes('loader')) {
+      return 'loader';
+    }
   }
-  if (slug.includes('api') || name.includes(' api')) {
+
+  if (slug.includes('api') || slug.includes('lib') || name.includes(' api') || name.includes(' library')) {
     return 'api';
   }
-  if (slug.includes('lib') || name.includes(' library') || name.includes('lib')) {
+
+  if (slug.includes('lib') || name.includes(' library') || name.includes(' core') || name.includes(' common')) {
     return 'library';
   }
+
   return 'mod';
 }
