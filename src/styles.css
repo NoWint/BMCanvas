@@ -1,88 +1,94 @@
 @import "tailwindcss";
 
 @theme {
-  --color-base: #09090B;
+  --color-bg: #09090B;
   --color-surface: #111113;
   --color-elevated: #18181B;
-  --color-sep: #27272A;
-  --color-primary: #FAFAFA;
-  --color-secondary: #A1A1AA;
-  --color-muted: #71717A;
+  --color-border: #27272A;
+  --color-border-subtle: #1E1E22;
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-text-muted: #71717A;
+  --color-text-dim: #52525B;
   --color-accent: #D4A017;
-  --color-accentlight: #FFCC66;
+  --color-accent-dim: #D4A01733;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
   --color-success: #22C55E;
-  --color-info: #3B82F6;
+  --color-node-mod: #D4A017;
+  --color-node-library: #3B82F6;
+  --color-node-api: #8B5CF6;
+  --color-node-loader: #22C55E;
 
-  --font-heading: "SF Pro Display", "Inter Tight", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-heading: 'SF Pro Display', 'Inter Tight', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* Base styles */
 html, body, #root {
   height: 100%;
-  width: 100%;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
-  color: var(--color-primary);
-  background: var(--color-base);
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-dim); }
+
+/* React Flow overrides */
+.react-flow__background { background: var(--color-bg) !important; }
+.react-flow__minimap { background: var(--color-surface) !important; border: 1px solid var(--color-border) !important; border-radius: 6px !important; }
+.react-flow__controls { display: none !important; }
+.react-flow__attribution { display: none !important; }
+
+/* Edge styles */
+.react-flow__edge-path { stroke-width: 1.5; }
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path { stroke-width: 2.5; }
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+@keyframes slideInRight {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-sep);
-  border-radius: 3px;
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-muted);
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.react-flow__background {
-  background: var(--color-base) !important;
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 160, 23, 0); }
+  50% { box-shadow: 0 0 8px 2px rgba(212, 160, 23, 0.15); }
 }
 
-.react-flow__minimap {
-  background: var(--color-surface) !important;
-  border: 1px solid var(--color-sep) !important;
-  border-radius: 8px !important;
+@keyframes dangerPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50% { box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.2); }
 }
 
-.react-flow__controls {
-  background: var(--color-surface) !important;
-  border: 1px solid var(--color-sep) !important;
-  border-radius: 8px !important;
-}
-
-.react-flow__controls button {
-  background: var(--color-surface) !important;
-  color: var(--color-secondary) !important;
-  border-bottom: 1px solid var(--color-sep) !important;
-}
-
-.react-flow__controls button:hover {
-  background: var(--color-elevated) !important;
-}
-
-.react-flow__edge-path {
-  stroke: var(--color-muted) !important;
-}
-
-.react-flow__attribution {
-  display: none !important;
-}
+/* Utility classes */
+.animate-fade-in { animation: fadeIn 200ms ease-out; }
+.animate-slide-right { animation: slideInRight 200ms ease-out; }
+.animate-slide-up { animation: slideInUp 250ms ease-out; }
+.animate-scale-in { animation: scaleIn 200ms ease-out; }
+.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.animate-danger-pulse { animation: dangerPulse 2s ease-in-out infinite; }
