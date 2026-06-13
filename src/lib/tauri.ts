@@ -318,6 +318,16 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
       mockMods.delete(args.id);
       return Promise.resolve();
     }
+    case 'update_project': {
+      const project = mockProjects.get(args.id);
+      if (!project) return Promise.reject(new Error('Project not found'));
+      if (args.name !== undefined) project.name = args.name;
+      if (args.description !== undefined) project.description = args.description;
+      if (args.mc_version !== undefined) project.mc_version = args.mc_version;
+      if (args.loader !== undefined) project.loader = args.loader;
+      project.updated_at = Date.now();
+      return Promise.resolve(project);
+    }
     case 'add_mod_to_project': {
       const projectId = args.projectId;
       const input = args.input;
@@ -636,6 +646,9 @@ export const getProject = (id: string): Promise<Project> =>
 
 export const deleteProject = (id: string): Promise<void> =>
   callInvoke('delete_project', { id });
+
+export const updateProject = (id: string, updates: { name?: string; description?: string; mc_version?: string; loader?: string }): Promise<Project> =>
+  callInvoke('update_project', { id, ...updates });
 
 // Mod commands
 export const addModToProject = (projectId: string, input: ModInput): Promise<ProjectMod> =>

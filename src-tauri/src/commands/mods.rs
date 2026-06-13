@@ -23,6 +23,9 @@ pub struct ProjectMod {
     pub source_url: Option<String>,
     pub license: Option<String>,
     pub added_at: i64,
+    pub homepage_url: Option<String>,
+    pub supported_mc_versions: Option<Vec<String>>,
+    pub changelog: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -37,6 +40,9 @@ pub struct ModInput {
     pub author: Option<String>,
     pub source_url: Option<String>,
     pub license: Option<String>,
+    pub homepage_url: Option<String>,
+    pub supported_mc_versions: Option<Vec<String>>,
+    pub changelog: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -61,10 +67,15 @@ pub fn add_mod_to_project(project_id: String, input: ModInput, db: State<DbState
     let id = Uuid::new_v4().to_string();
     let now = Utc::now().timestamp_millis();
 
+    let supported_mc_versions_json = input.supported_mc_versions
+        .as_ref()
+        .map(|v| serde_json::to_string(v).unwrap_or_else(|_| "[]".to_string()))
+        .unwrap_or_else(|| "[]".to_string());
+
     conn.execute(
-        "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
-        rusqlite::params![id, project_id, input.modrinth_id, input.slug, input.name, input.version_id, input.version_number, input.icon_url, input.description, input.author, input.source_url, input.license, now],
+        "INSERT INTO project_mods (id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at, homepage_url, changelog, supported_mc_versions)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
+        rusqlite::params![id, project_id, input.modrinth_id, input.slug, input.name, input.version_id, input.version_number, input.icon_url, input.description, input.author, input.source_url, input.license, now, input.homepage_url, input.changelog, supported_mc_versions_json],
     ).map_err(|e: rusqlite::Error| e.to_string())?;
 
     conn.execute("UPDATE projects SET updated_at = ?1 WHERE id = ?2", rusqlite::params![now, project_id])
@@ -84,6 +95,9 @@ pub fn add_mod_to_project(project_id: String, input: ModInput, db: State<DbState
         source_url: input.source_url,
         license: input.license,
         added_at: now,
+        homepage_url: input.homepage_url,
+        supported_mc_versions: input.supported_mc_versions,
+        changelog: input.changelog,
     })
 }
 
@@ -105,10 +119,14 @@ pub fn remove_mod_from_project(project_id: String, mod_id: String, db: State<DbS
 pub fn list_project_mods(project_id: String, db: State<DbState>) -> Result<Vec<ProjectMod>, String> {
     let conn = get_conn(&db)?;
     let mut stmt = conn.prepare(
-        "SELECT id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at FROM project_mods WHERE project_id = ?1 ORDER BY name"
+        "SELECT id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at, homepage_url, changelog, supported_mc_versions FROM project_mods WHERE project_id = ?1 ORDER BY name"
     ).map_err(|e: rusqlite::Error| e.to_string())?;
 
     let mods = stmt.query_map(rusqlite::params![project_id], |row: &rusqlite::Row| {
+        let homepage_url: Option<String> = row.get(13)?;
+        let changelog: Option<String> = row.get(14)?;
+        let supported_mc_versions_str: String = row.get(15).unwrap_or_default();
+        let supported_mc_versions: Vec<String> = serde_json::from_str(&supported_mc_versions_str).unwrap_or_default();
         Ok(ProjectMod {
             id: row.get(0)?,
             project_id: row.get(1)?,
@@ -123,6 +141,9 @@ pub fn list_project_mods(project_id: String, db: State<DbState>) -> Result<Vec<P
             source_url: row.get(10)?,
             license: row.get(11)?,
             added_at: row.get(12)?,
+            homepage_url,
+            supported_mc_versions: Some(supported_mc_versions),
+            changelog,
         })
     }).map_err(|e: rusqlite::Error| e.to_string())?
     .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;

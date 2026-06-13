@@ -32,10 +32,14 @@ pub fn export_pack(input: ExportInput, db: State<DbState>) -> Result<String, Str
         .map_err(|e: rusqlite::Error| e.to_string())?;
 
     let mut stmt = conn.prepare(
-        "SELECT id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at FROM project_mods WHERE project_id = ?1"
+        "SELECT id, project_id, modrinth_id, slug, name, version_id, version_number, icon_url, description, author, source_url, license, added_at, homepage_url, changelog, supported_mc_versions FROM project_mods WHERE project_id = ?1"
     ).map_err(|e: rusqlite::Error| e.to_string())?;
 
     let mods: Vec<ProjectMod> = stmt.query_map(rusqlite::params![input.project_id], |row: &rusqlite::Row| {
+        let homepage_url: Option<String> = row.get(13)?;
+        let changelog: Option<String> = row.get(14)?;
+        let supported_mc_versions_str: String = row.get(15).unwrap_or_default();
+        let supported_mc_versions: Vec<String> = serde_json::from_str(&supported_mc_versions_str).unwrap_or_default();
         Ok(ProjectMod {
             id: row.get(0)?,
             project_id: row.get(1)?,
@@ -50,6 +54,9 @@ pub fn export_pack(input: ExportInput, db: State<DbState>) -> Result<String, Str
             source_url: row.get(10)?,
             license: row.get(11)?,
             added_at: row.get(12)?,
+            homepage_url,
+            supported_mc_versions: Some(supported_mc_versions),
+            changelog,
         })
     }).map_err(|e: rusqlite::Error| e.to_string())?
     .collect::<Result<Vec<_>, _>>().map_err(|e: rusqlite::Error| e.to_string())?;

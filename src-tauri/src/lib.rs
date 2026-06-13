@@ -34,6 +34,7 @@ pub fn run() {
             commands::project::list_projects,
             commands::project::get_project,
             commands::project::delete_project,
+            commands::project::update_project,
             commands::mods::add_mod_to_project,
             commands::mods::remove_mod_from_project,
             commands::mods::list_project_mods,

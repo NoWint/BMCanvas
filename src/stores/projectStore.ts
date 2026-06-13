@@ -14,6 +14,7 @@ interface ProjectState {
   createProject: (input: ProjectInput) => Promise<Project>;
   selectProject: (id: string) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
+  updateProject: (id: string, updates: { name?: string; description?: string; mc_version?: string; loader?: string }) => Promise<void>;
   addMod: (input: ModInput) => Promise<void>;
   removeMod: (modId: string) => Promise<void>;
   loadMods: () => Promise<void>;
@@ -78,6 +79,19 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     }
   },
 
+  updateProject: async (id: string, updates: { name?: string; description?: string; mc_version?: string; loader?: string }) => {
+    try {
+      const updated = await tauri.updateProject(id, updates);
+      set((state) => ({
+        projects: state.projects.map((p) => (p.id === id ? updated : p)),
+        currentProject: state.currentProject?.id === id ? updated : state.currentProject,
+      }));
+      useToastStore.getState().addToast('项目已更新', 'success');
+    } catch (e) {
+      useToastStore.getState().addToast(String(e), 'error');
+    }
+  },
+
   addMod: async (input) => {
     const project = get().currentProject;
     if (!project) return;
@@ -112,7 +126,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
               ...enrichedInput,
               source_url: details.source_url ?? enrichedInput.source_url,
               license: details.license?.id ?? enrichedInput.license,
-              homepage_url: details.license?.name ?? enrichedInput.homepage_url,
+              homepage_url: details.homepage_url ?? enrichedInput.homepage_url,
               supported_mc_versions: details.versions ?? enrichedInput.supported_mc_versions,
             };
           }
