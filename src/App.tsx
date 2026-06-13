@@ -6,6 +6,8 @@ import { WelcomeScreen } from './components/welcome/WelcomeScreen';
 import { SearchPanel } from './components/panels/SearchPanel';
 import { DiagnosticsPanel } from './components/panels/DiagnosticsPanel';
 import { ExportDialog } from './components/panels/ExportDialog';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { ToastContainer } from './components/common/ToastContainer';
 import { useProjectStore } from './stores/projectStore';
 import { useUIStore } from './stores/uiStore';
 import { useKeyboard } from './hooks/useKeyboard';
@@ -25,15 +27,18 @@ function AppContent() {
   const showWelcome = welcomeVisible && !currentProject;
 
   return (
-    <ReactFlowProvider>
-      <div className="relative h-screen overflow-hidden">
-        <AppShell />
-        {activePanel === 'search' && <SearchPanel />}
-        {activePanel === 'diagnostics' && <DiagnosticsPanel />}
-        {activePanel === 'export' && <ExportDialog />}
-        {showWelcome && <WelcomeScreen />}
-      </div>
-    </ReactFlowProvider>
+    <ErrorBoundary>
+      <ReactFlowProvider>
+        <div className="relative h-screen overflow-hidden">
+          <AppShell />
+          {activePanel === 'search' && <SearchPanel />}
+          {activePanel === 'diagnostics' && <DiagnosticsPanel />}
+          {activePanel === 'export' && <ExportDialog />}
+          {showWelcome && <WelcomeScreen />}
+          <ToastContainer />
+        </div>
+      </ReactFlowProvider>
+    </ErrorBoundary>
   );
 }
 

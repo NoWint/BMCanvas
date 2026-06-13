@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Project, ProjectMod, ProjectInput, ModInput } from '../types';
 import * as tauri from '../lib/tauri';
+import { useToastStore } from './toastStore';
 
 interface ProjectState {
   projects: Project[];
@@ -32,6 +33,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       set({ projects, loading: false });
     } catch (e) {
       set({ error: String(e), loading: false });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 
@@ -40,9 +42,11 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     try {
       const project = await tauri.createProject(input);
       set((state) => ({ projects: [project, ...state.projects], loading: false }));
+      useToastStore.getState().addToast('项目已创建', 'success');
       return project;
     } catch (e) {
       set({ error: String(e), loading: false });
+      useToastStore.getState().addToast(String(e), 'error');
       throw e;
     }
   },
@@ -55,6 +59,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       set({ currentProject: project, mods, loading: false });
     } catch (e) {
       set({ error: String(e), loading: false });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 
@@ -66,8 +71,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         currentProject: state.currentProject?.id === id ? null : state.currentProject,
         mods: state.currentProject?.id === id ? [] : state.mods,
       }));
+      useToastStore.getState().addToast('项目已删除', 'success');
     } catch (e) {
       set({ error: String(e) });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 
@@ -128,8 +135,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
         }
       }
       await get().loadMods();
+      useToastStore.getState().addToast('已添加 ' + input.name, 'success');
     } catch (e) {
       set({ error: String(e) });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 
@@ -139,8 +148,10 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     try {
       await tauri.removeModFromProject(project.id, modId);
       set((state) => ({ mods: state.mods.filter((m) => m.id !== modId) }));
+      useToastStore.getState().addToast('模组已移除', 'success');
     } catch (e) {
       set({ error: String(e) });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 
@@ -152,6 +163,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
       set({ mods });
     } catch (e) {
       set({ error: String(e) });
+      useToastStore.getState().addToast(String(e), 'error');
     }
   },
 }));
