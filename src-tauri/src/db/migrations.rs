@@ -70,23 +70,15 @@ pub fn run(conn: &Connection) -> Result<(), String> {
         conn.execute("INSERT INTO schema_version (version) VALUES (1)", []).map_err(|e| e.to_string())?;
     }
 
-    // V2: Add homepage_url and changelog columns
+    // V2: Add homepage_url, supported_mc_versions, and changelog columns
     if current_version < 2 {
         conn.execute_batch(
             "ALTER TABLE project_mods ADD COLUMN homepage_url TEXT DEFAULT '';
+             ALTER TABLE project_mods ADD COLUMN supported_mc_versions TEXT DEFAULT '[]';
              ALTER TABLE project_mods ADD COLUMN changelog TEXT DEFAULT '';"
         ).map_err(|e| e.to_string())?;
 
         conn.execute("INSERT INTO schema_version (version) VALUES (2)", []).map_err(|e| e.to_string())?;
-    }
-
-    // V3: Add supported_mc_versions column
-    if current_version < 3 {
-        conn.execute_batch(
-            "ALTER TABLE project_mods ADD COLUMN supported_mc_versions TEXT DEFAULT '[]';"
-        ).map_err(|e| e.to_string())?;
-
-        conn.execute("INSERT INTO schema_version (version) VALUES (3)", []).map_err(|e| e.to_string())?;
     }
 
     Ok(())
