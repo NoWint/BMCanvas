@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import ReactFlow, { Background, MiniMap, type OnNodeClick, type ReactFlowInstance } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useGraphStore } from '../../stores/graphStore';
 import { useUIStore } from '../../stores/uiStore';
@@ -18,6 +19,7 @@ const edgeTypes = {
 };
 
 export function GraphCanvas() {
+  const { t } = useTranslation();
   const { mods, currentProject } = useProjectStore();
   const { nodes, edges, buildGraph } = useGraphStore();
   const { openInspector, setSelectedNode } = useUIStore();
@@ -47,8 +49,8 @@ export function GraphCanvas() {
     return (
       <div className="flex-1 flex items-center justify-center bg-[#0D0D0F]">
         <div className="text-center">
-          <div className="text-[#3F3F46] text-lg mb-2">No project selected</div>
-          <div className="text-[#27272A] text-sm">Create or select a project to begin</div>
+          <div className="text-[#3F3F46] text-lg mb-2">{t('graph.noProject')}</div>
+          <div className="text-[#27272A] text-sm">{t('graph.createOrSelect')}</div>
         </div>
       </div>
     );
@@ -59,9 +61,9 @@ export function GraphCanvas() {
       <div className="flex-1 relative bg-[#0D0D0F]">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="text-[#3F3F46] text-lg mb-1">Empty pack</div>
+            <div className="text-[#3F3F46] text-lg mb-1">{t('graph.emptyPack')}</div>
             <div className="text-[#27272A] text-sm">
-              Press <kbd className="px-1.5 py-0.5 bg-[#18181B] border border-[#27272A] rounded text-[#71717A] text-xs font-mono">⌘K</kbd> to add your first mod
+              {t('graph.addFirstMod')}
             </div>
           </div>
         </div>
@@ -103,6 +105,7 @@ export function GraphCanvas() {
 }
 
 function DiagnosticsBadge() {
+  const { t } = useTranslation();
   const { mods, currentProject } = useProjectStore();
   const { togglePanel } = useUIStore();
 
@@ -119,8 +122,8 @@ function DiagnosticsBadge() {
       className="absolute bottom-3 left-3 flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-[#18181B]/80 border border-[#27272A] backdrop-blur-sm text-[9px] font-mono cursor-pointer hover:border-[#3F3F46] transition-colors duration-100 z-10"
       onClick={() => togglePanel('diagnostics')}
     >
-      {critical > 0 && <span className="text-[#EF4444]">⚠ {critical} Critical</span>}
-      {warning > 0 && <span className="text-[#F59E0B]">{critical > 0 ? ' · ' : ''}{warning} Warning</span>}
+      {critical > 0 && <span className="text-[#EF4444]">⚠ {critical} {t('diagnostics.critical')}</span>}
+      {warning > 0 && <span className="text-[#F59E0B]">{critical > 0 ? ' · ' : ''}{warning} {t('diagnostics.warning')}</span>}
     </div>
   );
 }

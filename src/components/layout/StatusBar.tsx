@@ -2,8 +2,10 @@ import { useProjectStore } from '../../stores/projectStore';
 import { detectConflicts } from '../../engine/conflictDetector';
 import * as tauri from '../../lib/tauri';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function StatusBar() {
+  const { t, i18n } = useTranslation();
   const { currentProject, mods } = useProjectStore();
   const [depCount, setDepCount] = useState(0);
   const [criticalCount, setCriticalCount] = useState(0);
@@ -35,10 +37,19 @@ export function StatusBar() {
       <span className="text-[#A1A1AA]">{currentProject.name}</span>
       <span className="text-[#52525B]">{currentProject.mc_version}</span>
       <span className="text-[#52525B]">{currentProject.loader}</span>
-      <span className="ml-auto text-[#52525B]">{mods.length} mods</span>
-      <span className="text-[#3F3F46]">{depCount} deps</span>
-      {criticalCount > 0 && <span className="text-[#EF4444]">{criticalCount} crit</span>}
-      {warningCount > 0 && <span className="text-[#F59E0B]">{warningCount} warn</span>}
+      <span className="ml-auto text-[#52525B]">{t('statusBar.mods', { count: mods.length })}</span>
+      <span className="text-[#3F3F46]">{t('statusBar.deps', { count: depCount })}</span>
+      {criticalCount > 0 && <span className="text-[#EF4444]">{t('statusBar.crit', { count: criticalCount })}</span>}
+      {warningCount > 0 && <span className="text-[#F59E0B]">{t('statusBar.warn', { count: warningCount })}</span>}
+      <button
+        onClick={() => {
+          const newLang = i18n.language === 'zh-CN' ? 'en' : 'zh-CN';
+          i18n.changeLanguage(newLang);
+        }}
+        className="text-[9px] text-[#86868b] hover:text-[#f5f5f7] font-mono transition-colors"
+      >
+        {i18n.language === 'zh-CN' ? '中' : 'EN'}
+      </button>
     </div>
   );
 }

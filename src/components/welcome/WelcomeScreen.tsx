@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import * as tauri from '../../lib/tauri';
@@ -20,6 +21,7 @@ function formatDownloads(n: number): string {
 }
 
 export function WelcomeScreen() {
+  const { t } = useTranslation();
   const { projects, loadProjects, createProject, selectProject, deleteProject, addMod } = useProjectStore();
   const { hideWelcome } = useUIStore();
   const [showCreate, setShowCreate] = useState(false);
@@ -190,9 +192,9 @@ export function WelcomeScreen() {
             className="text-[28px] font-semibold text-[#FAFAFA]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
-            ModCanvas
+            {t('welcome.title')}
           </h1>
-          <p className="text-[12px] text-[#71717A] mt-1">Design Minecraft Modpacks Visually</p>
+          <p className="text-[12px] text-[#71717A] mt-1">{t('welcome.subtitle')}</p>
         </div>
 
         {/* Section 1: Quick Actions */}
@@ -207,16 +209,16 @@ export function WelcomeScreen() {
               <div className="text-[10px] text-[#D4A017] font-semibold mb-0.5">
                 {demoLoading ? '...' : '⚡'}
               </div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">Quick Demo</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">4 sample mods</div>
+              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.quickDemo')}</div>
+              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.demoMods')}</div>
             </button>
             <button
               onClick={() => setShowCreate(true)}
               className="px-3 py-3 bg-[#111113] border border-[#27272A] rounded-lg hover:border-[#D4A017] hover:bg-[#18181B] transition-colors duration-100 text-center"
             >
               <div className="text-[10px] text-[#D4A017] font-semibold mb-0.5">+</div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">Create New</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">Blank modpack</div>
+              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.createNew')}</div>
+              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.blankModpack')}</div>
             </button>
             <button
               onClick={handleImport}
@@ -226,8 +228,8 @@ export function WelcomeScreen() {
               <div className="text-[10px] text-[#22C55E] font-semibold mb-0.5">
                 {importing ? '...' : '↓'}
               </div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">Import File</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">.mrpack / .zip</div>
+              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.importFile')}</div>
+              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.mrpackZip')}</div>
             </button>
           </div>
         </div>
@@ -235,9 +237,9 @@ export function WelcomeScreen() {
         {/* Create Form (conditional) */}
         {showCreate && (
           <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4 mb-8 space-y-3">
-            <div className="text-[10px] text-[#FAFAFA] font-medium">Create New Pack</div>
+            <div className="text-[10px] text-[#FAFAFA] font-medium">{t('common.createPack')}</div>
             <div>
-              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">Name</label>
+              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.name')}</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -247,7 +249,7 @@ export function WelcomeScreen() {
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">MC Version</label>
+                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.minecraftVersion')}</label>
                 <select
                   value={mcVersion}
                   onChange={(e) => setMcVersion(e.target.value)}
@@ -259,7 +261,7 @@ export function WelcomeScreen() {
                 </select>
               </div>
               <div className="flex-1">
-                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">Loader</label>
+                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.loader')}</label>
                 <select
                   value={loader}
                   onChange={(e) => setLoader(e.target.value as Loader)}
@@ -274,7 +276,7 @@ export function WelcomeScreen() {
               </div>
             </div>
             <div>
-              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">Description</label>
+              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.description')}</label>
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -287,13 +289,13 @@ export function WelcomeScreen() {
                 onClick={() => setShowCreate(false)}
                 className="px-3 py-1.5 text-[10px] text-[#71717A] hover:text-[#FAFAFA] transition-colors duration-100"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleCreate}
                 className="px-4 py-1.5 bg-[#D4A017] text-[#09090B] text-[10px] font-semibold rounded-md hover:bg-[#FFCC66] transition-colors duration-100"
               >
-                Create Pack
+                {t('common.createPack')}
               </button>
             </div>
           </div>
@@ -301,7 +303,7 @@ export function WelcomeScreen() {
 
         {/* Section 2: Trending Modpacks */}
         <div className="mb-8">
-          <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">Trending Modpacks</div>
+          <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">{t('welcome.trendingModpacks')}</div>
           <div className="grid grid-cols-3 gap-2">
             {TRENDING_MODPACKS.map((mp) => (
               <div
@@ -313,13 +315,13 @@ export function WelcomeScreen() {
                   {mp.mc_version} · {mp.loader}
                 </div>
                 <div className="text-[9px] text-[#3F3F46] mb-2">
-                  {formatDownloads(mp.downloads)} downloads
+                  {formatDownloads(mp.downloads)} {t('welcome.downloads')}
                 </div>
                 <button
                   onClick={() => handleTrendingImport(mp.project_id)}
                   className="mt-auto w-full px-2 py-1 bg-[#09090B] border border-[#27272A] rounded-md text-[9px] text-[#22C55E] hover:bg-[#22C55E] hover:text-[#09090B] hover:border-[#22C55E] transition-colors duration-100 font-medium"
                 >
-                  Import
+                  {t('search.import')}
                 </button>
               </div>
             ))}
@@ -329,7 +331,7 @@ export function WelcomeScreen() {
         {/* Section 3: Recent Projects */}
         {projects.length > 0 && (
           <div>
-            <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">Recent Projects</div>
+            <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">{t('welcome.recentProjects')}</div>
             <div className="space-y-1">
               {projects.map((p) => (
                 <button

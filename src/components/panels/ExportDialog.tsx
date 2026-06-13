@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import * as tauri from '../../lib/tauri';
@@ -12,6 +13,7 @@ const FORMATS: { id: ExportFormat; name: string; desc: string }[] = [
 ];
 
 export function ExportDialog() {
+  const { t } = useTranslation();
   const { currentProject } = useProjectStore();
   const { closePanel } = useUIStore();
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('modrinth');
@@ -44,7 +46,7 @@ export function ExportDialog() {
       <div className="absolute inset-0 bg-[#09090B]/60 backdrop-blur-sm" onClick={closePanel} />
       <div className="relative w-[420px] bg-[#18181B] border border-[#27272A] rounded-xl shadow-2xl overflow-hidden animate-scale-in">
         <div className="flex items-center justify-between px-5 py-3 border-b border-[#1E1E22]">
-          <span className="text-[12px] text-[#FAFAFA] font-medium">Export Pack</span>
+          <span className="text-[12px] text-[#FAFAFA] font-medium">{t('export.title')}</span>
           <button onClick={closePanel} className="text-[#3F3F46] hover:text-[#FAFAFA] text-[12px]">✕</button>
         </div>
         <div className="p-5 space-y-2">
@@ -59,7 +61,7 @@ export function ExportDialog() {
               }`}
             >
               <div className={`text-[11px] font-medium ${selectedFormat === fmt.id ? 'text-[#D4A017]' : 'text-[#FAFAFA]'}`}>
-                {fmt.name}
+                {t(`export.${fmt.id}`)}
               </div>
               <div className="text-[9px] text-[#52525B] mt-0.5">{fmt.desc}</div>
             </button>
@@ -73,14 +75,14 @@ export function ExportDialog() {
             onClick={closePanel}
             className="px-3 py-1.5 text-[10px] text-[#71717A] hover:text-[#FAFAFA] transition-colors duration-100"
           >
-            Cancel
+            {t('export.cancel')}
           </button>
           <button
             onClick={handleExport}
             disabled={exporting}
             className="px-4 py-1.5 bg-[#D4A017] text-[#09090B] text-[10px] font-semibold rounded-md hover:bg-[#FFCC66] disabled:opacity-50 transition-colors duration-100"
           >
-            {exporting ? 'Exporting...' : 'Export'}
+            {exporting ? t('export.exporting') : t('export.export')}
           </button>
         </div>
       </div>

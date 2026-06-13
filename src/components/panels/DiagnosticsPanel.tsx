@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import { detectConflicts } from '../../engine/conflictDetector';
@@ -12,6 +13,7 @@ const SEVERITY_STYLES: Record<DiagnosticSeverity, { color: string; bg: string; b
 };
 
 export function DiagnosticsPanel() {
+  const { t } = useTranslation();
   const { mods, currentProject } = useProjectStore();
   const { closePanel, setSelectedNode, openInspector } = useUIStore();
   const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
@@ -70,28 +72,28 @@ export function DiagnosticsPanel() {
       <div className="absolute inset-0 bg-[#09090B]/40" onClick={closePanel} />
       <div className="relative bg-[#111113] border-t border-[#27272A] max-h-[40vh] overflow-y-auto">
         <div className="flex items-center justify-between px-3 py-2 border-b border-[#1E1E22]">
-          <span className="text-[10px] text-[#FAFAFA] font-medium">Diagnostics</span>
+          <span className="text-[10px] text-[#FAFAFA] font-medium">{t('diagnostics.title')}</span>
           <div className="flex items-center gap-2">
             {critical.length > 0 && (
               <span className="text-[8px] text-[#EF4444] bg-[#EF444411] px-1.5 py-0.5 rounded">
-                {critical.length} Critical
+                {critical.length} {t('diagnostics.critical')}
               </span>
             )}
             {warnings.length > 0 && (
               <span className="text-[8px] text-[#F59E0B] bg-[#F59E0B11] px-1.5 py-0.5 rounded">
-                {warnings.length} Warning
+                {warnings.length} {t('diagnostics.warning')}
               </span>
             )}
             <button onClick={closePanel} className="text-[#3F3F46] hover:text-[#FAFAFA] text-[10px]">✕</button>
           </div>
         </div>
         {diagnostics.length === 0 ? (
-          <div className="px-3 py-6 text-center text-[#52525B] text-[10px]">No issues found</div>
+          <div className="px-3 py-6 text-center text-[#52525B] text-[10px]">{t('diagnostics.noIssues')}</div>
         ) : (
           <>
-            {renderGroup('Critical', critical)}
-            {renderGroup('Warnings', warnings)}
-            {renderGroup('Info', infos)}
+            {renderGroup(t('diagnostics.critical'), critical)}
+            {renderGroup(t('diagnostics.warning'), warnings)}
+            {renderGroup(t('diagnostics.info'), infos)}
           </>
         )}
       </div>

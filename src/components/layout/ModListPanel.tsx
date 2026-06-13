@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import { getNodeType } from '../../engine/dependencyResolver';
@@ -12,6 +13,7 @@ const NODE_COLORS: Record<NodeType, string> = {
 };
 
 export function ModListPanel() {
+  const { t } = useTranslation();
   const { currentProject, mods, removeMod, projects, selectProject } = useProjectStore();
   const { openInspector, setSelectedNode, togglePanel, showWelcome } = useUIStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -81,7 +83,7 @@ export function ModListPanel() {
               className="w-full flex items-center gap-2 px-2.5 py-2 text-[10px] text-[#D4A017] hover:bg-[#1E1E22] transition-colors duration-100 border-b border-[#1E1E22]"
             >
               <span>←</span>
-              <span>All Projects</span>
+              <span>{t('modList.allProjects')}</span>
             </button>
 
             {/* Project list */}
@@ -113,7 +115,7 @@ export function ModListPanel() {
               className="w-full flex items-center gap-2 px-2.5 py-2 text-[10px] text-[#52525B] hover:text-[#71717A] hover:bg-[#1E1E22] transition-colors duration-100 border-t border-[#1E1E22]"
             >
               <span className="text-[#D4A017]">+</span>
-              <span>New Project</span>
+              <span>{t('modList.newProject')}</span>
             </button>
           </div>
         )}
@@ -121,7 +123,7 @@ export function ModListPanel() {
 
       <div className="flex-1 overflow-y-auto">
         <div className="px-3 pt-2 pb-1">
-          <div className="text-[8px] text-[#52525B] uppercase tracking-wider">Mods ({mods.length})</div>
+          <div className="text-[8px] text-[#52525B] uppercase tracking-wider">{t('modList.mods', { count: mods.length })}</div>
         </div>
         <div className="px-1.5">
           {mods.map((mod) => {
@@ -159,7 +161,7 @@ export function ModListPanel() {
           className="w-full flex items-center gap-2 px-2.5 py-2 bg-[#18181B] rounded-md text-[10px] text-[#71717A] hover:text-[#D4A017] hover:bg-[#18181B] transition-colors duration-100"
         >
           <span className="text-[#D4A017]">+</span>
-          <span>Add Mod</span>
+          <span>{t('modList.addMod')}</span>
           <kbd className="ml-auto text-[7px] font-mono text-[#3F3F46] bg-[#09090B] px-1 py-0.5 rounded">⌘K</kbd>
         </button>
       </div>

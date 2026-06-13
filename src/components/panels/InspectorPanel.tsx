@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '../../stores/projectStore';
 import { useUIStore } from '../../stores/uiStore';
 import { getNodeType } from '../../engine/dependencyResolver';
@@ -20,6 +21,7 @@ const NODE_LABELS: Record<NodeType, string> = {
 };
 
 export function InspectorPanel() {
+  const { t } = useTranslation();
   const { mods } = useProjectStore();
   const { selectedNodeId, closeInspector } = useUIStore();
   const [versions, setVersions] = useState<ModrinthVersion[]>([]);
@@ -51,7 +53,7 @@ export function InspectorPanel() {
   if (!mod) {
     return (
       <div className="w-[320px] bg-[#0C0C0E] border-l border-[#1E1E22] flex items-center justify-center shrink-0">
-        <span className="text-[#3F3F46] text-[10px]">Select a mod to inspect</span>
+        <span className="text-[#3F3F46] text-[10px]">{t('inspector.noModSelected')}</span>
       </div>
     );
   }
@@ -67,7 +69,7 @@ export function InspectorPanel() {
   return (
     <div className="w-[320px] bg-[#0C0C0E] border-l border-[#1E1E22] flex flex-col shrink-0 animate-slide-right overflow-y-auto">
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#1E1E22]">
-        <span className="text-[8px] text-[#52525B] uppercase tracking-wider">Inspector</span>
+        <span className="text-[8px] text-[#52525B] uppercase tracking-wider">{t('inspector.modDetails')}</span>
         <button onClick={closeInspector} className="text-[#3F3F46] hover:text-[#FAFAFA] text-[10px]">✕</button>
       </div>
       <div className="p-3 space-y-4">
@@ -88,13 +90,13 @@ export function InspectorPanel() {
           </div>
         </div>
 
-        <InfoField label="Description" value={description} />
-        <InfoField label="Author" value={mod.author} />
+        <InfoField label={t('common.description')} value={description} />
+        <InfoField label={t('common.author')} value={mod.author} />
 
         {/* Supported MC Versions */}
         {supportedVersions && supportedVersions.length > 0 && (
           <div>
-            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">Supported MC Versions</div>
+            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">{t('inspector.supportedVersions')}</div>
             <div className="flex flex-wrap gap-1">
               {supportedVersions.map((v: string) => (
                 <span key={v} className="text-[8px] px-1.5 py-0.5 rounded bg-[#18181B] text-[#A1A1AA] border border-[#27272A] font-mono">
@@ -108,7 +110,7 @@ export function InspectorPanel() {
         {/* License */}
         {(licenseId || licenseName) && (
           <div>
-            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">License</div>
+            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">{t('inspector.license')}</div>
             <div className="text-[9px] text-[#A1A1AA]">{licenseName || licenseId}</div>
           </div>
         )}
@@ -116,7 +118,7 @@ export function InspectorPanel() {
         {/* Links */}
         {sourceUrl && (
           <div>
-            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">Repository</div>
+            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">{t('inspector.repository')}</div>
             <a href={sourceUrl} target="_blank" rel="noopener" className="text-[9px] text-[#D4A017] hover:underline break-all">
               {sourceUrl}
             </a>
@@ -126,7 +128,7 @@ export function InspectorPanel() {
         {/* Versions */}
         <div>
           <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">
-            Versions {loadingVersions && <span className="text-[#3F3F46]">loading...</span>}
+            {t('inspector.versions')} {loadingVersions && <span className="text-[#3F3F46]">{t('inspector.loading')}</span>}
           </div>
           <div className="space-y-1 max-h-32 overflow-y-auto">
             {versions.slice(0, 10).map((v) => (
@@ -139,7 +141,7 @@ export function InspectorPanel() {
               </div>
             ))}
             {versions.length === 0 && !loadingVersions && (
-              <div className="text-[8px] text-[#3F3F46]">No version info available</div>
+              <div className="text-[8px] text-[#3F3F46]">{t('inspector.noVersionInfo')}</div>
             )}
           </div>
         </div>
@@ -147,7 +149,7 @@ export function InspectorPanel() {
         {/* Changelog */}
         {mod.changelog && (
           <div>
-            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">Changelog</div>
+            <div className="text-[8px] text-[#52525B] uppercase tracking-wider mb-1">{t('inspector.changelog')}</div>
             <div className="text-[9px] text-[#71717A] max-h-24 overflow-y-auto whitespace-pre-wrap bg-[#09090B] rounded p-2 border border-[#1E1E22]">
               {mod.changelog}
             </div>
