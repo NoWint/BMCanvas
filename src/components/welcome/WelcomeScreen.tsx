@@ -184,76 +184,76 @@ export function WelcomeScreen() {
   };
 
   return (
-    <div className="absolute inset-0 z-30 bg-[#09090B] flex items-center justify-center animate-fade-in overflow-y-auto">
+    <div className="absolute inset-0 z-30 bg-[#000000] flex items-center justify-center animate-fade-in overflow-y-auto">
       <div className="w-full max-w-[640px] px-6 py-12">
         {/* Title */}
         <div className="text-center mb-10">
           <h1
-            className="text-[28px] font-semibold text-[#FAFAFA]"
+            className="text-[32px] font-semibold text-[#f5f5f7]"
             style={{ fontFamily: 'var(--font-heading)' }}
           >
             {t('welcome.title')}
           </h1>
-          <p className="text-[12px] text-[#71717A] mt-1">{t('welcome.subtitle')}</p>
+          <p className="text-[13px] text-[#86868b] mt-2">{t('welcome.subtitle')}</p>
         </div>
 
         {/* Section 1: Quick Actions */}
         <div className="mb-8">
-          <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">Quick Actions</div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="text-[9px] text-[#48484a] uppercase tracking-wider mb-3">Quick Actions</div>
+          <div className="grid grid-cols-3 gap-3">
             <button
               onClick={handleDemo}
               disabled={demoLoading}
-              className="px-3 py-3 bg-[#111113] border border-[#27272A] rounded-lg hover:border-[#D4A017] hover:bg-[#18181B] transition-colors duration-100 disabled:opacity-50 text-center"
+              className="glass-card px-4 py-4 hover:border-[#0a84ff] disabled:opacity-50 text-center"
             >
-              <div className="text-[10px] text-[#D4A017] font-semibold mb-0.5">
+              <div className="text-[11px] text-[#0a84ff] font-semibold mb-1">
                 {demoLoading ? '...' : '⚡'}
               </div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.quickDemo')}</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.demoMods')}</div>
+              <div className="text-[13px] text-[#f5f5f7] font-medium">{t('welcome.quickDemo')}</div>
+              <div className="text-[9px] text-[#48484a] mt-1">{t('welcome.demoMods')}</div>
             </button>
             <button
               onClick={() => setShowCreate(true)}
-              className="px-3 py-3 bg-[#111113] border border-[#27272A] rounded-lg hover:border-[#D4A017] hover:bg-[#18181B] transition-colors duration-100 text-center"
+              className="glass-card px-4 py-4 hover:border-[#0a84ff] text-center"
             >
-              <div className="text-[10px] text-[#D4A017] font-semibold mb-0.5">+</div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.createNew')}</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.blankModpack')}</div>
+              <div className="text-[11px] text-[#0a84ff] font-semibold mb-1">+</div>
+              <div className="text-[13px] text-[#f5f5f7] font-medium">{t('welcome.createNew')}</div>
+              <div className="text-[9px] text-[#48484a] mt-1">{t('welcome.blankModpack')}</div>
             </button>
             <button
               onClick={handleImport}
               disabled={importing}
-              className="px-3 py-3 bg-[#111113] border border-[#27272A] rounded-lg hover:border-[#22C55E] hover:bg-[#18181B] transition-colors duration-100 disabled:opacity-50 text-center"
+              className="glass-card px-4 py-4 hover:border-[#30d158] disabled:opacity-50 text-center"
             >
-              <div className="text-[10px] text-[#22C55E] font-semibold mb-0.5">
+              <div className="text-[11px] text-[#30d158] font-semibold mb-1">
                 {importing ? '...' : '↓'}
               </div>
-              <div className="text-[10px] text-[#FAFAFA] font-medium">{t('welcome.importFile')}</div>
-              <div className="text-[8px] text-[#52525B] mt-0.5">{t('welcome.mrpackZip')}</div>
+              <div className="text-[13px] text-[#f5f5f7] font-medium">{t('welcome.importFile')}</div>
+              <div className="text-[9px] text-[#48484a] mt-1">{t('welcome.mrpackZip')}</div>
             </button>
           </div>
         </div>
 
         {/* Create Form (conditional) */}
         {showCreate && (
-          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4 mb-8 space-y-3">
-            <div className="text-[10px] text-[#FAFAFA] font-medium">{t('common.createPack')}</div>
+          <div className="glass-panel rounded-xl p-5 mb-8 space-y-3">
+            <div className="text-[13px] text-[#f5f5f7] font-medium">{t('common.createPack')}</div>
             <div>
-              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.name')}</label>
+              <label className="text-[9px] text-[#48484a] uppercase tracking-wider">{t('common.name')}</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tech Revolution"
-                className="w-full mt-1 px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-[11px] text-[#FAFAFA] placeholder-[#3F3F46] outline-none focus:border-[#D4A017] transition-colors duration-100"
+                className="w-full mt-1 px-3 py-2 bg-[#000000] border border-[rgba(255,255,255,0.08)] rounded-lg text-[13px] text-[#f5f5f7] placeholder-[#48484a] outline-none focus:border-[#0a84ff] transition-colors duration-300"
               />
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.minecraftVersion')}</label>
+                <label className="text-[9px] text-[#48484a] uppercase tracking-wider">{t('common.minecraftVersion')}</label>
                 <select
                   value={mcVersion}
                   onChange={(e) => setMcVersion(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-[11px] text-[#FAFAFA] outline-none focus:border-[#D4A017]"
+                  className="w-full mt-1 px-3 py-2 bg-[#000000] border border-[rgba(255,255,255,0.08)] rounded-lg text-[13px] text-[#f5f5f7] outline-none focus:border-[#0a84ff] transition-colors duration-300"
                 >
                   {MC_VERSIONS.map((v) => (
                     <option key={v} value={v}>{v}</option>
@@ -261,11 +261,11 @@ export function WelcomeScreen() {
                 </select>
               </div>
               <div className="flex-1">
-                <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.loader')}</label>
+                <label className="text-[9px] text-[#48484a] uppercase tracking-wider">{t('common.loader')}</label>
                 <select
                   value={loader}
                   onChange={(e) => setLoader(e.target.value as Loader)}
-                  className="w-full mt-1 px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-[11px] text-[#FAFAFA] outline-none focus:border-[#D4A017]"
+                  className="w-full mt-1 px-3 py-2 bg-[#000000] border border-[rgba(255,255,255,0.08)] rounded-lg text-[13px] text-[#f5f5f7] outline-none focus:border-[#0a84ff] transition-colors duration-300"
                 >
                   {LOADERS.map((l) => (
                     <option key={l} value={l}>
@@ -276,24 +276,24 @@ export function WelcomeScreen() {
               </div>
             </div>
             <div>
-              <label className="text-[9px] text-[#52525B] uppercase tracking-wider">{t('common.description')}</label>
+              <label className="text-[9px] text-[#48484a] uppercase tracking-wider">{t('common.description')}</label>
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Technology-focused progression pack"
-                className="w-full mt-1 px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-[11px] text-[#FAFAFA] placeholder-[#3F3F46] outline-none focus:border-[#D4A017] transition-colors duration-100"
+                className="w-full mt-1 px-3 py-2 bg-[#000000] border border-[rgba(255,255,255,0.08)] rounded-lg text-[13px] text-[#f5f5f7] placeholder-[#48484a] outline-none focus:border-[#0a84ff] transition-colors duration-300"
               />
             </div>
             <div className="flex justify-end gap-2 pt-1">
               <button
                 onClick={() => setShowCreate(false)}
-                className="px-3 py-1.5 text-[10px] text-[#71717A] hover:text-[#FAFAFA] transition-colors duration-100"
+                className="btn-secondary px-4 py-2 text-[11px]"
               >
                 {t('common.cancel')}
               </button>
               <button
                 onClick={handleCreate}
-                className="px-4 py-1.5 bg-[#D4A017] text-[#09090B] text-[10px] font-semibold rounded-md hover:bg-[#FFCC66] transition-colors duration-100"
+                className="btn-primary px-5 py-2 text-[11px]"
               >
                 {t('common.createPack')}
               </button>
@@ -303,23 +303,23 @@ export function WelcomeScreen() {
 
         {/* Section 2: Trending Modpacks */}
         <div className="mb-8">
-          <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">{t('welcome.trendingModpacks')}</div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="text-[9px] text-[#48484a] uppercase tracking-wider mb-3">{t('welcome.trendingModpacks')}</div>
+          <div className="grid grid-cols-3 gap-3">
             {TRENDING_MODPACKS.map((mp) => (
               <div
                 key={mp.project_id}
-                className="bg-[#111113] border border-[#27272A] rounded-lg p-3 hover:border-[#3F3F46] transition-colors duration-100 flex flex-col"
+                className="glass-card p-4 flex flex-col"
               >
-                <div className="text-[11px] text-[#FAFAFA] font-medium leading-tight mb-1">{mp.name}</div>
-                <div className="text-[9px] text-[#52525B] font-mono mb-1">
+                <div className="text-[13px] text-[#f5f5f7] font-medium leading-tight mb-1">{mp.name}</div>
+                <div className="text-[9px] text-[#86868b] font-mono mb-1">
                   {mp.mc_version} · {mp.loader}
                 </div>
-                <div className="text-[9px] text-[#3F3F46] mb-2">
+                <div className="text-[9px] text-[#48484a] mb-3">
                   {formatDownloads(mp.downloads)} {t('welcome.downloads')}
                 </div>
                 <button
                   onClick={() => handleTrendingImport(mp.project_id)}
-                  className="mt-auto w-full px-2 py-1 bg-[#09090B] border border-[#27272A] rounded-md text-[9px] text-[#22C55E] hover:bg-[#22C55E] hover:text-[#09090B] hover:border-[#22C55E] transition-colors duration-100 font-medium"
+                  className="mt-auto w-full btn-success px-2 py-1.5 text-[9px] font-medium"
                 >
                   {t('search.import')}
                 </button>
@@ -331,21 +331,21 @@ export function WelcomeScreen() {
         {/* Section 3: Recent Projects */}
         {projects.length > 0 && (
           <div>
-            <div className="text-[9px] text-[#52525B] uppercase tracking-wider mb-3">{t('welcome.recentProjects')}</div>
-            <div className="space-y-1">
+            <div className="text-[9px] text-[#48484a] uppercase tracking-wider mb-3">{t('welcome.recentProjects')}</div>
+            <div className="space-y-2">
               {projects.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => handleSelect(p.id)}
-                  className="w-full text-left px-4 py-3 bg-[#111113] border border-[#27272A] rounded-lg hover:border-[#3F3F46] hover:bg-[#18181B] transition-colors duration-100 group relative"
+                  className="w-full text-left px-4 py-3 glass-card-static hover:border-[rgba(255,255,255,0.12)] group relative"
                 >
-                  <div className="text-[12px] text-[#FAFAFA] font-medium">{p.name}</div>
-                  <div className="text-[9px] text-[#52525B] mt-0.5 font-mono">
+                  <div className="text-[13px] text-[#f5f5f7] font-medium">{p.name}</div>
+                  <div className="text-[9px] text-[#86868b] mt-0.5 font-mono">
                     {p.mc_version} · {p.loader}
                   </div>
                   <div
                     onClick={(e) => handleDelete(p.id, e)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-md text-[10px] text-[#3F3F46] hover:text-[#FAFAFA] hover:bg-[#27272A] opacity-0 group-hover:opacity-100 transition-all duration-100"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-md text-[11px] text-[#48484a] hover:text-[#f5f5f7] hover:bg-[rgba(255,255,255,0.08)] opacity-0 group-hover:opacity-100 transition-all duration-300"
                   >
                     ✕
                   </div>

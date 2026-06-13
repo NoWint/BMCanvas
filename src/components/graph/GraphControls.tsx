@@ -8,22 +8,22 @@ export function GraphControls() {
   return (
     <div className="absolute bottom-3 right-3 flex gap-1 z-10">
       <button
-        onClick={() => zoomIn({ duration: 200 })}
-        className="flex items-center justify-center w-7 h-7 rounded bg-[#18181B]/80 border border-[#27272A] text-[#71717A] text-xs backdrop-blur-sm hover:text-[#FAFAFA] hover:border-[#3F3F46] transition-colors duration-100"
+        onClick={() => zoomIn({ duration: 300 })}
+        className="flex items-center justify-center w-8 h-8 glass-panel rounded-lg text-[#86868b] text-xs hover:text-[#f5f5f7] hover:border-[rgba(255,255,255,0.14)] transition-all duration-300"
         title={t('graph.zoomIn')}
       >
         +
       </button>
       <button
-        onClick={() => zoomOut({ duration: 200 })}
-        className="flex items-center justify-center w-7 h-7 rounded bg-[#18181B]/80 border border-[#27272A] text-[#71717A] text-xs backdrop-blur-sm hover:text-[#FAFAFA] hover:border-[#3F3F46] transition-colors duration-100"
+        onClick={() => zoomOut({ duration: 300 })}
+        className="flex items-center justify-center w-8 h-8 glass-panel rounded-lg text-[#86868b] text-xs hover:text-[#f5f5f7] hover:border-[rgba(255,255,255,0.14)] transition-all duration-300"
         title={t('graph.zoomOut')}
       >
         −
       </button>
       <button
         onClick={() => fitView({ padding: 0.2, duration: 300 })}
-        className="flex items-center justify-center w-7 h-7 rounded bg-[#18181B]/80 border border-[#27272A] text-[#71717A] text-xs backdrop-blur-sm hover:text-[#FAFAFA] hover:border-[#3F3F46] transition-colors duration-100"
+        className="flex items-center justify-center w-8 h-8 glass-panel rounded-lg text-[#86868b] text-xs hover:text-[#f5f5f7] hover:border-[rgba(255,255,255,0.14)] transition-all duration-300"
         title={t('graph.fitView')}
       >
         ⊞

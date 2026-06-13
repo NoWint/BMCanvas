@@ -8,7 +8,7 @@ export function AppShell() {
   const inspectorOpen = useUIStore((s) => s.inspectorOpen);
 
   return (
-    <div className="flex flex-col h-screen bg-[#09090B]">
+    <div className="flex flex-col h-screen bg-[#000000]">
       <div className="flex flex-1 overflow-hidden">
         <ModListPanel />
         <GraphCanvas />
