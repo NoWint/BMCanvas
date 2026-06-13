@@ -1,3 +1,4 @@
+import './i18n';
 import { useEffect } from 'react';
 import { ReactFlowProvider } from 'reactflow';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
