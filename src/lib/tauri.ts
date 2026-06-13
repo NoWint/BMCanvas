@@ -690,9 +690,10 @@ export const fetchAndSaveDependencies = (
   modrinthId: string,
   mcVersion: string,
   loader: string,
-  projectModId: string
+  projectModId: string,
+  projectId: string
 ): Promise<Dependency[]> =>
-  callInvoke('fetch_and_save_dependencies', { modrinthId, mcVersion, loader, projectModId });
+  callInvoke('fetch_and_save_dependencies', { modrinthId, mcVersion, loader, projectModId, projectId });
 
 // Import modpack from file
 export const importModpack = (filePath: string): Promise<Project> =>

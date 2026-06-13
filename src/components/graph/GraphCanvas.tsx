@@ -28,9 +28,14 @@ export function GraphCanvas() {
 
   useEffect(() => {
     if (!currentProject) return;
+    const projId = currentProject.id;
+    const projLoader = currentProject.loader;
+    const currentMods = useProjectStore.getState().mods;
     const loadAndBuild = async () => {
-      const deps = await tauri.getAllDependencies(currentProject.id);
-      buildGraph(mods, deps, currentProject.loader);
+      const deps = await tauri.getAllDependencies(projId);
+      const latestMods = useProjectStore.getState().mods;
+      const modsToUse = latestMods.length > 0 ? latestMods : currentMods;
+      buildGraph(modsToUse, deps, projLoader);
     };
     loadAndBuild();
   }, [mods, currentProject, buildGraph]);

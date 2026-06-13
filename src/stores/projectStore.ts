@@ -142,7 +142,8 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
             mod.modrinth_id,
             project.mc_version,
             project.loader,
-            mod.id
+            mod.id,
+            project.id
           );
         } catch (e) {
           console.warn('Failed to fetch dependencies:', e);
