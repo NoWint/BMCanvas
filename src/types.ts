@@ -187,6 +187,7 @@ export interface ModNodeData {
   nodeType: NodeType;
   dependencyCount: number;
   collapsed: boolean;
+  collapsedDepCount?: number;
   hasConflict: boolean;
   description: string | null;
   author: string | null;

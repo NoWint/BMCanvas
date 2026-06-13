@@ -8,6 +8,7 @@ import { useUIStore } from '../../stores/uiStore';
 import { ModNode } from './ModNode';
 import { RequiredEdgeComponent, OptionalEdgeComponent, ConflictEdgeComponent } from './DependencyEdge';
 import { GraphControls } from './GraphControls';
+import { ContextMenu } from './ContextMenu';
 import { detectConflicts } from '../../engine/conflictDetector';
 import * as tauri from '../../lib/tauri';
 
@@ -21,7 +22,7 @@ const edgeTypes = {
 export function GraphCanvas() {
   const { t } = useTranslation();
   const { mods, currentProject } = useProjectStore();
-  const { nodes, edges, buildGraph } = useGraphStore();
+  const { nodes, edges, buildGraph, toggleCollapse, setHighlighted, clearHighlighted, updatePinnedPosition, setContextMenu, contextMenu, highlightedNodeIds } = useGraphStore();
   const { openInspector, setSelectedNode } = useUIStore();
   const rfInstance = useRef<ReactFlowInstance | null>(null);
 
@@ -37,13 +38,74 @@ export function GraphCanvas() {
   const onNodeClick: OnNodeClick = useCallback((_event, node) => {
     if (node.id === 'loader-node') return;
     setSelectedNode(node.id);
+
+    // If clicking the same node that's highlighted, clear highlight
+    if (highlightedNodeIds.size > 0 && highlightedNodeIds.has(node.id) && highlightedNodeIds.size === 1) {
+      clearHighlighted();
+    } else {
+      // Compute path from this node to root (trace upstream edges)
+      const { edges: currentEdges } = useGraphStore.getState();
+      const pathNodeIds = new Set<string>();
+      pathNodeIds.add(node.id);
+
+      let current = new Set([node.id]);
+      while (current.size > 0) {
+        const next = new Set<string>();
+        for (const edge of currentEdges) {
+          if (current.has(edge.target) && !pathNodeIds.has(edge.source)) {
+            pathNodeIds.add(edge.source);
+            next.add(edge.source);
+          }
+        }
+        current = next;
+      }
+
+      setHighlighted(pathNodeIds);
+    }
+
     openInspector(node.id);
-  }, [setSelectedNode, openInspector]);
+  }, [setSelectedNode, openInspector, setHighlighted, clearHighlighted, highlightedNodeIds]);
+
+  const onNodeDoubleClick = useCallback((_event: React.MouseEvent, node: any) => {
+    if (node.id === 'loader-node') return;
+    toggleCollapse(node.id);
+  }, [toggleCollapse]);
+
+  const onNodeContextMenu = useCallback((event: React.MouseEvent, node: any) => {
+    event.preventDefault();
+    if (node.id === 'loader-node') return;
+    setContextMenu({ nodeId: node.id, x: event.clientX, y: event.clientY });
+  }, [setContextMenu]);
+
+  const onNodeDragStop = useCallback((_event: React.MouseEvent, node: any) => {
+    updatePinnedPosition(node.id, { x: node.position.x, y: node.position.y });
+  }, [updatePinnedPosition]);
+
+  const onPaneClick = useCallback(() => {
+    setContextMenu(null);
+    clearHighlighted();
+  }, [setContextMenu, clearHighlighted]);
 
   const onInit = useCallback((instance: ReactFlowInstance) => {
     rfInstance.current = instance;
     setTimeout(() => instance.fitView({ padding: 0.2, duration: 300 }), 100);
   }, []);
+
+  // Apply dimmed class to nodes/edges not in highlightedNodeIds
+  const hasHighlight = highlightedNodeIds.size > 0;
+  const displayNodes = hasHighlight
+    ? nodes.map((n) => ({
+        ...n,
+        className: highlightedNodeIds.has(n.id) ? '' : 'dimmed',
+      }))
+    : nodes;
+
+  const displayEdges = hasHighlight
+    ? edges.map((e) => ({
+        ...e,
+        className: highlightedNodeIds.has(e.source) && highlightedNodeIds.has(e.target) ? '' : 'dimmed',
+      }))
+    : edges;
 
   if (!currentProject) {
     return (
@@ -73,12 +135,21 @@ export function GraphCanvas() {
 
   return (
     <div className="flex-1 relative bg-[#0D0D0F]">
+      <style>{`
+        .dimmed { opacity: 0.2; transition: opacity 0.3s ease; }
+        .react-flow__node:not(.dimmed) { transition: opacity 0.3s ease; }
+        .react-flow__edge:not(.dimmed) { transition: opacity 0.3s ease; }
+      `}</style>
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
+        nodes={displayNodes}
+        edges={displayEdges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
+        onNodeContextMenu={onNodeContextMenu}
+        onNodeDragStop={onNodeDragStop}
+        onPaneClick={onPaneClick}
         onInit={onInit}
         fitView
         fitViewOptions={{ padding: 0.2 }}
@@ -91,7 +162,7 @@ export function GraphCanvas() {
         <MiniMap
           nodeColor={(node) => {
             const data = node.data as any;
-            const colors: Record<string, string> = { mod: '#D4A017', library: '#3B82F6', api: '#8B5CF6', loader: '#22C55E' };
+            const colors: Record<string, string> = { mod: '#ff9f0a', library: '#0a84ff', api: '#bf5af2', loader: '#30d158' };
             return colors[data?.nodeType ?? 'mod'] ?? '#52525B';
           }}
           maskColor="#09090B99"
@@ -100,6 +171,9 @@ export function GraphCanvas() {
       </ReactFlow>
       <GraphControls />
       <DiagnosticsBadge />
+      {contextMenu && (
+        <ContextMenu nodeId={contextMenu.nodeId} x={contextMenu.x} y={contextMenu.y} />
+      )}
     </div>
   );
 }
