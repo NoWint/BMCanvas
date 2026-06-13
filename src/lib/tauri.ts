@@ -20,6 +20,274 @@ const mockMods: Map<string, any[]> = new Map();
 const mockDeps: Map<string, any[]> = new Map();
 let mockIdCounter = 1;
 
+// ── Mock Mod Database (20+ entries) ──────────────────────────────────
+const MOCK_MODS_DB: any[] = [
+  // Optimization
+  {
+    project_id: 'mock-sodium', project_type: 'mod', slug: 'sodium', title: 'Sodium',
+    description: 'Modern rendering engine for Minecraft that greatly improves frame rates.',
+    author: 'jellysquid3', categories: ['optimization', 'fabric'], display_categories: ['optimization'],
+    downloads: 15000000, icon_url: '', latest_version: '0.6.0', client_side: 'required', server_side: 'unsupported',
+    versions: ['1.21.1', '1.20.4', '1.20.1'], loaders: ['fabric', 'neoforge'],
+  },
+  {
+    project_id: 'mock-iris', project_type: 'mod', slug: 'iris', title: 'Iris Shaders',
+    description: 'A shader loader for Minecraft with Sodium support.',
+    author: 'coderbot', categories: ['optimization', 'fabric'], display_categories: ['optimization'],
+    downloads: 8000000, icon_url: '', latest_version: '1.8.0', client_side: 'required', server_side: 'unsupported',
+    versions: ['1.21.1', '1.20.4'], loaders: ['fabric'],
+  },
+  {
+    project_id: 'mock-lithium', project_type: 'mod', slug: 'lithium', title: 'Lithium',
+    description: 'General-purpose optimization mod for Minecraft that improves game logic.',
+    author: 'jellysquid3', categories: ['optimization', 'fabric'], display_categories: ['optimization'],
+    downloads: 6000000, icon_url: '', latest_version: '0.13.0', client_side: 'optional', server_side: 'optional',
+    versions: ['1.21.1', '1.20.4', '1.20.1'], loaders: ['fabric'],
+  },
+  {
+    project_id: 'mock-ferritecore', project_type: 'mod', slug: 'ferritecore', title: 'FerriteCore',
+    description: 'Memory optimization mod that reduces Minecraft memory usage significantly.',
+    author: 'malte0811', categories: ['optimization', 'fabric'], display_categories: ['optimization'],
+    downloads: 4500000, icon_url: '', latest_version: '7.0.0', client_side: 'optional', server_side: 'optional',
+    versions: ['1.21.1', '1.20.4'], loaders: ['fabric', 'neoforge'],
+  },
+  {
+    project_id: 'mock-fabric-api', project_type: 'mod', slug: 'fabric-api', title: 'Fabric API',
+    description: 'Core API layer for Fabric mods, providing hooks and utilities.',
+    author: 'modmuss50', categories: ['optimization', 'fabric', 'library'], display_categories: ['optimization'],
+    downloads: 20000000, icon_url: '', latest_version: '0.92.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.4', '1.20.1'], loaders: ['fabric'],
+  },
+  // Adventure
+  {
+    project_id: 'mock-create', project_type: 'mod', slug: 'create', title: 'Create',
+    description: 'A technology themed mod adding tools and components for automation and decoration.',
+    author: 'simibubi', categories: ['adventure', 'technology', 'forge'], display_categories: ['adventure'],
+    downloads: 25000000, icon_url: '', latest_version: '0.5.1', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1', '1.19.2'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  {
+    project_id: 'mock-twilight-forest', project_type: 'mod', slug: 'twilight-forest', title: 'The Twilight Forest',
+    description: 'A dimension exploration mod with new biomes, creatures, and dungeons.',
+    author: 'Benimatic', categories: ['adventure', 'worldgen', 'forge'], display_categories: ['adventure'],
+    downloads: 12000000, icon_url: '', latest_version: '4.5.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1', '1.19.2'], loaders: ['forge', 'neoforge'],
+  },
+  {
+    project_id: 'mock-better-adventures', project_type: 'mod', slug: 'better-adventures', title: 'Better Adventures',
+    description: 'Enhances exploration with new structures, loot, and world events.',
+    author: 'Tschipp', categories: ['adventure', 'forge'], display_categories: ['adventure'],
+    downloads: 2000000, icon_url: '', latest_version: '1.3.0', client_side: 'required', server_side: 'optional',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  // Redstone
+  {
+    project_id: 'mock-project-red', project_type: 'mod', slug: 'project-red', title: 'Project Red',
+    description: 'A redstone enhancement mod adding wires, gates, and circuit components.',
+    author: 'MrTJP', categories: ['redstone', 'forge'], display_categories: ['redstone'],
+    downloads: 3500000, icon_url: '', latest_version: '4.19.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1', '1.19.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'mock-redstone-flux', project_type: 'mod', slug: 'redstone-flux', title: 'Redstone Flux',
+    description: 'A power transmission API and mod for redstone-based energy systems.',
+    author: 'TeamCoFH', categories: ['redstone', 'technology', 'forge'], display_categories: ['redstone'],
+    downloads: 5000000, icon_url: '', latest_version: '1.5.0', client_side: 'optional', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+  // Magic
+  {
+    project_id: 'mock-botania', project_type: 'mod', slug: 'botania', title: 'Botania',
+    description: 'A magic-themed tech mod using natural flora for automation and power.',
+    author: 'Vazkii', categories: ['magic', 'forge'], display_categories: ['magic'],
+    downloads: 9000000, icon_url: '', latest_version: '447', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  {
+    project_id: 'mock-ars-nouveau', project_type: 'mod', slug: 'ars-nouveau', title: 'Ars Nouveau',
+    description: 'A spell-crafting magic mod with glyphs and magical automation.',
+    author: 'baileyholl', categories: ['magic', 'forge'], display_categories: ['magic'],
+    downloads: 4000000, icon_url: '', latest_version: '5.3.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+  {
+    project_id: 'mock-blood-magic', project_type: 'mod', slug: 'blood-magic', title: 'Blood Magic',
+    description: 'A dark magic mod centered around blood rituals and soul networks.',
+    author: 'WayofTime', categories: ['magic', 'forge'], display_categories: ['magic'],
+    downloads: 3000000, icon_url: '', latest_version: '3.3.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  // Technology
+  {
+    project_id: 'mock-mekanism', project_type: 'mod', slug: 'mekanism', title: 'Mekanism',
+    description: 'A high-tech mod adding advanced machinery, tools, and energy systems.',
+    author: 'aidancbrady', categories: ['technology', 'forge'], display_categories: ['technology'],
+    downloads: 11000000, icon_url: '', latest_version: '10.7.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+  {
+    project_id: 'mock-thermal-expansion', project_type: 'mod', slug: 'thermal-expansion', title: 'Thermal Expansion',
+    description: 'A tech mod adding machines, dynamos, and RF-powered devices.',
+    author: 'TeamCoFH', categories: ['technology', 'forge'], display_categories: ['technology'],
+    downloads: 7000000, icon_url: '', latest_version: '10.3.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+  {
+    project_id: 'mock-industrial-foregoing', project_type: 'mod', slug: 'industrial-foregoing', title: 'Industrial Foregoing',
+    description: 'An industrial mod with machines for farming, resource generation, and more.',
+    author: 'Buuz135', categories: ['technology', 'forge'], display_categories: ['technology'],
+    downloads: 5500000, icon_url: '', latest_version: '3.5.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+  {
+    project_id: 'mock-ae2', project_type: 'mod', slug: 'applied-energistics-2', title: 'Applied Energistics 2',
+    description: 'A digital storage and autocrafting mod with ME network systems.',
+    author: 'AlgorithmX2', categories: ['technology', 'forge'], display_categories: ['technology'],
+    downloads: 8500000, icon_url: '', latest_version: '15.0.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  // Decoration
+  {
+    project_id: 'mock-chisel', project_type: 'mod', slug: 'chisel', title: 'Chisel',
+    description: 'A decoration mod adding hundreds of block variants and textures.',
+    author: 'tterrag1098', categories: ['decoration', 'forge'], display_categories: ['decoration'],
+    downloads: 4000000, icon_url: '', latest_version: '2.0.0', client_side: 'required', server_side: 'optional',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  {
+    project_id: 'mock-macaws-furniture', project_type: 'mod', slug: 'macaws-furniture', title: "Macaw's Furniture",
+    description: 'Adds a wide variety of functional and decorative furniture blocks.',
+    author: 'sketchmacaw', categories: ['decoration', 'forge'], display_categories: ['decoration'],
+    downloads: 6500000, icon_url: '', latest_version: '3.2.0', client_side: 'required', server_side: 'optional',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  {
+    project_id: 'mock-supplementaries', project_type: 'mod', slug: 'supplementaries', title: 'Supplementaries',
+    description: 'Vanilla-style decorative and functional additions for building and redstone.',
+    author: 'MehVahdJukaar', categories: ['decoration', 'redstone', 'forge'], display_categories: ['decoration'],
+    downloads: 5000000, icon_url: '', latest_version: '3.1.0', client_side: 'required', server_side: 'optional',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  // Food
+  {
+    project_id: 'mock-farmers-delight', project_type: 'mod', slug: 'farmers-delight', title: "Farmer's Delight",
+    description: 'A farming and cooking mod with new crops, meals, and kitchen utilities.',
+    author: 'vectorwing', categories: ['food', 'forge'], display_categories: ['food'],
+    downloads: 7500000, icon_url: '', latest_version: '1.2.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge', 'fabric'],
+  },
+  {
+    project_id: 'mock-spice-of-life', project_type: 'mod', slug: 'spice-of-life', title: 'Spice of Life: Carrot Edition',
+    description: 'Encourages dietary variety by rewarding players for eating different foods.',
+    author: 'crazysnailboy', categories: ['food', 'forge'], display_categories: ['food'],
+    downloads: 1500000, icon_url: '', latest_version: '1.12.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  // Worldgen
+  {
+    project_id: 'mock-terralith', project_type: 'mod', slug: 'terralith', title: 'Terralith',
+    description: 'A worldgen overhaul adding 95+ biomes using vanilla blocks and features.',
+    author: 'Stardust', categories: ['worldgen', 'fabric'], display_categories: ['worldgen'],
+    downloads: 5500000, icon_url: '', latest_version: '2.5.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.4', '1.20.1'], loaders: ['fabric', 'neoforge'],
+  },
+  {
+    project_id: 'mock-biomes-o-plenty', project_type: 'mod', slug: 'biomes-o-plenty', title: "Biomes O' Plenty",
+    description: 'Adds 80+ new biomes and terrain features for diverse world generation.',
+    author: 'Forstride', categories: ['worldgen', 'forge'], display_categories: ['worldgen'],
+    downloads: 9000000, icon_url: '', latest_version: '19.0.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['forge', 'neoforge'],
+  },
+];
+
+// ── Mock Modpack Database (10+ entries) ──────────────────────────────
+const MOCK_MODPACKS_DB: any[] = [
+  {
+    project_id: 'modpack-fabulously-optimized', project_type: 'modpack', slug: 'fabulously-optimized', title: 'Fabulously Optimized',
+    description: 'A performance-focused modpack with OptiFine parity and visual enhancements.',
+    author: 'Madis0', categories: ['optimization', 'lightweight', 'fabric'], display_categories: ['optimization'],
+    downloads: 5000000, icon_url: '', latest_version: '6.2.0', client_side: 'required', server_side: 'unsupported',
+    versions: ['1.21.1', '1.20.4'], loaders: ['fabric'],
+  },
+  {
+    project_id: 'modpack-atm9', project_type: 'modpack', slug: 'all-the-mods-9', title: 'All the Mods 9',
+    description: 'A large kitchen-sink modpack with something for everyone.',
+    author: 'ATMTeam', categories: ['large', 'forge'], display_categories: ['large'],
+    downloads: 3000000, icon_url: '', latest_version: '0.3.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-create-above', project_type: 'modpack', slug: 'create-above-and-beyond', title: 'Create: Above and Beyond',
+    description: 'A Create-centric adventure modpack with quests and automation challenges.',
+    author: 'Simibubi', categories: ['technology', 'adventure', 'forge'], display_categories: ['technology'],
+    downloads: 2000000, icon_url: '', latest_version: '1.5.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-rlcraft', project_type: 'modpack', slug: 'rlcraft', title: 'RLCraft',
+    description: 'A hardcore survival modpack with realistic mechanics and danger around every corner.',
+    author: 'Shivaxi', categories: ['large', 'adventure', 'forge'], display_categories: ['large'],
+    downloads: 8000000, icon_url: '', latest_version: '2.9.0', client_side: 'required', server_side: 'required',
+    versions: ['1.12.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-vault-hunters', project_type: 'modpack', slug: 'vault-hunters', title: 'Vault Hunters',
+    description: 'A multiplayer RPG modpack with vaults, loot, and skill progression.',
+    author: 'iskall85', categories: ['multiplayer', 'adventure', 'forge'], display_categories: ['multiplayer'],
+    downloads: 4000000, icon_url: '', latest_version: '1.18.2', client_side: 'required', server_side: 'required',
+    versions: ['1.18.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-sky-factory-4', project_type: 'modpack', slug: 'sky-factory-4', title: 'Sky Factory 4',
+    description: 'A skyblock modpack with resource trees and automation from a single block.',
+    author: 'Bacon_Donut', categories: ['technology', 'lightweight', 'forge'], display_categories: ['technology'],
+    downloads: 3500000, icon_url: '', latest_version: '4.2.0', client_side: 'required', server_side: 'required',
+    versions: ['1.12.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-pixelmon', project_type: 'modpack', slug: 'pixelmon', title: 'Pixelmon Modpack',
+    description: 'Catch, train, and battle Pokémon in Minecraft with this multiplayer modpack.',
+    author: 'PixelmonMod', categories: ['multiplayer', 'adventure', 'forge'], display_categories: ['multiplayer'],
+    downloads: 6000000, icon_url: '', latest_version: '9.2.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-better-mc', project_type: 'modpack', slug: 'better-mc', title: 'Better MC',
+    description: 'An enhanced vanilla+ modpack that improves every aspect of Minecraft.',
+    author: 'Lapito', categories: ['lightweight', 'adventure', 'fabric'], display_categories: ['lightweight'],
+    downloads: 4500000, icon_url: '', latest_version: '3.1.0', client_side: 'required', server_side: 'required',
+    versions: ['1.21.1', '1.20.1'], loaders: ['fabric'],
+  },
+  {
+    project_id: 'modpack-enigmatica-9', project_type: 'modpack', slug: 'enigmatica-9', title: 'Enigmatica 9',
+    description: 'A large expert-mode questing modpack with deep progression and automation.',
+    author: 'EnigmaQuest', categories: ['large', 'technology', 'forge'], display_categories: ['large'],
+    downloads: 1500000, icon_url: '', latest_version: '1.6.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-cottage-craft', project_type: 'modpack', slug: 'cottage-craft', title: 'Cottage Craft',
+    description: 'A cozy, lightweight modpack focused on farming, cooking, and decoration.',
+    author: 'CozyGamer', categories: ['lightweight', 'food', 'fabric'], display_categories: ['lightweight'],
+    downloads: 800000, icon_url: '', latest_version: '2.0.0', client_side: 'required', server_side: 'optional',
+    versions: ['1.21.1'], loaders: ['fabric'],
+  },
+  {
+    project_id: 'modpack-divine-journey-2', project_type: 'modpack', slug: 'divine-journey-2', title: 'Divine Journey 2',
+    description: 'A massive expert magic and tech modpack with 200+ mods and deep quests.',
+    author: 'Morphan', categories: ['large', 'magic', 'forge'], display_categories: ['large'],
+    downloads: 1200000, icon_url: '', latest_version: '1.10.0', client_side: 'required', server_side: 'required',
+    versions: ['1.12.2'], loaders: ['forge'],
+  },
+  {
+    project_id: 'modpack-medieval-mc', project_type: 'modpack', slug: 'medieval-mc', title: 'Medieval MC',
+    description: 'A medieval-themed adventure modpack with magic, combat, and exploration.',
+    author: 'Schlumpf', categories: ['adventure', 'magic', 'forge'], display_categories: ['adventure'],
+    downloads: 2500000, icon_url: '', latest_version: '4.0.0', client_side: 'required', server_side: 'required',
+    versions: ['1.20.1'], loaders: ['forge'],
+  },
+];
+
 function mockInvoke(cmd: string, args: any): Promise<any> {
   switch (cmd) {
     case 'create_project': {
@@ -115,46 +383,20 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
       return Promise.resolve(allStored);
     }
     case 'search_mods': {
-      // Return mock search results
+      const q = (args.query || '').toLowerCase().trim();
+      let hits = MOCK_MODS_DB;
+      if (q) {
+        hits = MOCK_MODS_DB.filter((m: any) =>
+          m.title.toLowerCase().includes(q) ||
+          m.slug.toLowerCase().includes(q) ||
+          m.description.toLowerCase().includes(q)
+        );
+      }
       return Promise.resolve({
-        hits: [
-          {
-            project_id: 'mock-sodium',
-            slug: 'sodium',
-            title: 'Sodium',
-            description: 'Modern rendering engine for Minecraft',
-            author: 'jellysquid3',
-            icon_url: null,
-            downloads: 15000000,
-            loaders: ['fabric', 'neoforge'],
-            game_versions: ['1.21.1', '1.20.4'],
-          },
-          {
-            project_id: 'mock-iris',
-            slug: 'iris',
-            title: 'Iris Shaders',
-            description: 'Shader loader for Sodium',
-            author: 'coderbot',
-            icon_url: null,
-            downloads: 8000000,
-            loaders: ['fabric'],
-            game_versions: ['1.21.1'],
-          },
-          {
-            project_id: 'mock-create',
-            slug: 'create',
-            title: 'Create',
-            description: 'Technology and automation mod',
-            author: 'simibubi',
-            icon_url: null,
-            downloads: 25000000,
-            loaders: ['forge', 'neoforge', 'fabric'],
-            game_versions: ['1.21.1', '1.20.1'],
-          },
-        ],
-        total_hits: 3,
-        offset: 0,
-        limit: 10,
+        hits,
+        total_hits: hits.length,
+        offset: args.offset || 0,
+        limit: args.limit || 10,
       });
     }
     case 'get_mod_details': {
@@ -264,38 +506,20 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
       return Promise.resolve(project);
     }
     case 'search_modpacks': {
+      const q = (args.query || '').toLowerCase().trim();
+      let hits = MOCK_MODPACKS_DB;
+      if (q) {
+        hits = MOCK_MODPACKS_DB.filter((m: any) =>
+          m.title.toLowerCase().includes(q) ||
+          m.slug.toLowerCase().includes(q) ||
+          m.description.toLowerCase().includes(q)
+        );
+      }
       return Promise.resolve({
-        hits: [
-          {
-            project_id: 'modpack-fabulously-optimized',
-            slug: 'fabulously-optimized',
-            title: 'Fabulously Optimized',
-            description: 'A performance-focused modpack with OptiFine parity.',
-            author: 'Madis0',
-            icon_url: null,
-            downloads: 5000000,
-            loaders: ['fabric'],
-            versions: ['1.21.1', '1.20.4'],
-            project_type: 'modpack',
-            categories: ['optimization'],
-          },
-          {
-            project_id: 'modpack-atm9',
-            slug: 'all-the-mods-9',
-            title: 'All the Mods 9',
-            description: 'A large kitchen-sink modpack with something for everyone.',
-            author: 'ATMTeam',
-            icon_url: null,
-            downloads: 3000000,
-            loaders: ['forge'],
-            versions: ['1.20.1'],
-            project_type: 'modpack',
-            categories: ['kitchen-sink'],
-          },
-        ],
-        total_hits: 2,
-        offset: 0,
-        limit: 10,
+        hits,
+        total_hits: hits.length,
+        offset: args.offset || 0,
+        limit: args.limit || 10,
       });
     }
     case 'import_modpack_from_modrinth': {
@@ -334,6 +558,48 @@ function mockInvoke(cmd: string, args: any): Promise<any> {
           { project_id: 'mock-fabric-api', name: 'Fabric API', slug: 'fabric-api', icon_url: null, description: 'Fabric mod loader API', dep_type: 'required' },
           { project_id: 'mock-lithium', name: 'Lithium', slug: 'lithium', icon_url: null, description: 'General-purpose optimization mod', dep_type: 'optional' },
         ],
+      });
+    }
+    case 'search_mods_by_category': {
+      const category = (args.category || '').toLowerCase();
+      const loaders = args.loaders as string[] | undefined;
+      const gameVersions = args.gameVersions as string[] | undefined;
+      let hits = MOCK_MODS_DB;
+      if (category === 'popular') {
+        hits = [...MOCK_MODS_DB].sort((a: any, b: any) => b.downloads - a.downloads);
+      } else if (category === 'newest') {
+        hits = [...MOCK_MODS_DB].sort((a: any, b: any) => b.downloads - a.downloads).reverse();
+      } else {
+        hits = MOCK_MODS_DB.filter((m: any) => m.categories.includes(category));
+      }
+      if (loaders && loaders.length > 0) {
+        hits = hits.filter((m: any) => m.loaders.some((l: string) => loaders.includes(l)));
+      }
+      if (gameVersions && gameVersions.length > 0) {
+        hits = hits.filter((m: any) => m.versions.some((v: string) => gameVersions.includes(v)));
+      }
+      return Promise.resolve({
+        hits,
+        total_hits: hits.length,
+        offset: args.page || 0,
+        limit: 20,
+      });
+    }
+    case 'search_modpacks_by_category': {
+      const category = (args.category || '').toLowerCase();
+      let hits = MOCK_MODPACKS_DB;
+      if (category === 'popular') {
+        hits = [...MOCK_MODPACKS_DB].sort((a: any, b: any) => b.downloads - a.downloads);
+      } else if (category === 'newest') {
+        hits = [...MOCK_MODPACKS_DB].sort((a: any, b: any) => b.downloads - a.downloads).reverse();
+      } else {
+        hits = MOCK_MODPACKS_DB.filter((m: any) => m.categories.includes(category));
+      }
+      return Promise.resolve({
+        hits,
+        total_hits: hits.length,
+        offset: args.page || 0,
+        limit: 20,
       });
     }
     case 'export_pack':
@@ -430,3 +696,11 @@ export const importModpackFromModrinth = (modrinthId: string): Promise<Project> 
 // Preview modpack contents from Modrinth
 export const getModpackContents = (modrinthId: string): Promise<ModpackContent> =>
   callInvoke('get_modpack_contents', { modrinthId });
+
+// Search mods by category
+export const searchModsByCategory = (category: string, loaders?: string[], gameVersions?: string[], page?: number): Promise<ModrinthSearchResult> =>
+  callInvoke('search_mods_by_category', { category, loaders, gameVersions, page: page ?? 0 });
+
+// Search modpacks by category
+export const searchModpacksByCategory = (category: string, page?: number): Promise<ModrinthSearchResult> =>
+  callInvoke('search_modpacks_by_category', { category, page: page ?? 0 });
